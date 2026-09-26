@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>SpeedRace 3D</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05070c;font-family:Arial,Tahoma,sans-serif;color:#fff}#game{position:fixed;inset:0}canvas{display:block;width:100%;height:100%}#hud{position:fixed;top:12px;left:12px;right:12px;display:flex;justify-content:space-between;align-items:flex-start;pointer-events:none;z-index:5}.panel{background:rgba(5,10,18,.68);border:1px solid rgba(255,255,255,.16);backdrop-filter:blur(8px);border-radius:14px;padding:9px 12px;min-width:150px}.row{display:flex;gap:10px;align-items:center;margin:3px 0}.bar{height:8px;background:#222;border-radius:9px;overflow:hidden;width:120px}.fill{height:100%;width:100%;background:linear-gradient(90deg,#00e5ff,#22ff83)}#menu{position:fixed;inset:0;z-index:10;display:grid;place-items:center;background:radial-gradient(circle at 50% 35%,rgba(0,180,255,.18),rgba(0,0,0,.88) 60%)}.card{width:min(92vw,520px);padding:28px;border-radius:24px;text-align:center;background:rgba(8,14,25,.9);border:1px solid rgba(255,255,255,.15);box-shadow:0 20px 80px #000}.title{font-size:clamp(40px,9vw,76px);font-weight:900;letter-spacing:2px;margin:0 0 5px;background:linear-gradient(90deg,#00d9ff,#fff,#8d6bff);-webkit-background-clip:text;color:transparent}.sub{opacity:.7;margin-bottom:22px}button{border:0;border-radius:13px;padding:13px 20px;font-size:17px;font-weight:800;cursor:pointer;background:#08bfff;color:#001018;margin:5px}button.secondary{background:#242c3a;color:#fff}.small{font-size:13px;opacity:.6;margin-top:12px}.touch{position:fixed;bottom:18px;left:0;right:0;display:flex;justify-content:space-between;padding:0 18px;z-index:8;pointer-events:none}.touch .group{display:flex;gap:12px;pointer-events:auto}.touch button{width:64px;height:58px;padding:0;font-size:25px;border-radius:18px;background:rgba(10,18,30,.72);color:#fff;border:1px solid rgba(255,255,255,.2);backdrop-filter:blur(8px)}#pause{position:fixed;right:15px;top:90px;z-index:8;padding:10px 14px;font-size:14px;background:rgba(10,18,30,.72);color:#fff;border:1px solid rgba(255,255,255,.2)}#gameover{display:none;position:fixed;inset:0;z-index:12;place-items:center;background:rgba(0,0,0,.72)}#gameover .card{max-width:430px}.hidden{display:none!important}
+</style>
+</head>
+<body>
+<div id="game"></div>
+<div id="hud" class="hidden">
+ <div class="panel"><div>🏁 النقاط: <b id="score">0</b></div><div>🪙 العملات: <b id="coins">0</b></div><div>❤️ الحياة: <b id="hp">3</b></div></div>
+ <div class="panel"><div>⚡ السرعة: <b id="speed">0</b> km/h</div><div class="row">💨 <div class="bar"><div id="nitro" class="fill"></div></div></div></div>
+</div>
+<button id="pause" class="hidden">⏸ إيقاف</button>
+<div id="menu"><div class="card"><h1 class="title">SpeedRace 3D</h1><div class="sub">سباق ثلاثي الأبعاد حقيقي باستخدام WebGL</div><button id="start">🏎️ ابدأ السباق</button><button id="quality" class="secondary">جودة: عالية</button><div class="small">التحكم: ← → أو A/D — Space للـ Nitro — P للإيقاف</div></div></div>
+<div id="gameover"><div class="card"><h2>💥 انتهى السباق</h2><p>النقاط: <b id="finalScore">0</b></p><p>أفضل نتيجة: <b id="best">0</b></p><button id="again">🔄 إعادة السباق</button><button id="home" class="secondary">🏠 القائمة</button></div></div>
+<div class="touch"><div class="group"><button id="left">◀</button><button id="right">▶</button></div><div class="group"><button id="nitroBtn">⚡</button></div></div>
+<script type="module">
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
+
+const root=document.getElementById('game');
+const scene=new THREE.Scene(); scene.background=new THREE.Color(0x79b9e8); scene.fog=new THREE.Fog(0x79b9e8,55,260);
+const camera=new THREE.PerspectiveCamera(58,innerWidth/innerHeight,.1,600); camera.position.set(0,4.2,11); camera.lookAt(0,1, -25);
+const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'}); renderer.setPixelRatio(Math.min(devicePixelRatio,2)); renderer.setSize(innerWidth,innerHeight); renderer.shadowMap.enabled=true; renderer.shadowMap.type=THREE.PCFSoftShadowMap; root.appendChild(renderer.domElement);
+scene.add(new THREE.HemisphereLight(0xbfe8ff,0x26331f,2.1)); const sun=new THREE.DirectionalLight(0xffffff,3.2); sun.position.set(-30,45,20); sun.castShadow=true; sun.shadow.mapSize.set(2048,2048); scene.add(sun);
+
+const world=new THREE.Group(); scene.add(world); const road=new THREE.Group(); world.add(road); const scenery=new THREE.Group(); world.add(scenery); const traffic=new THREE.Group(); world.add(traffic); const fx=new THREE.Group(); world.add(fx);
+const mat=(c,rough=.6,metal=0)=>new THREE.MeshStandardMaterial({color:c,roughness:rough,metalness:metal});
+const roadMat=mat(0x20242b,.9), lineMat=mat(0xf4f4f4,.5), grassMat=mat(0x236b38,1), curbMat=mat(0xff334d,.65);
+
+// Road: long 3D geometry with curbs and lane markers
+const ground=new THREE.Mesh(new THREE.PlaneGeometry(180,620),grassMat); ground.rotation.x=-Math.PI/2; ground.position.y=-.15; ground.position.z=-180; ground.receiveShadow=true; road.add(ground);
+const roadMesh=new THREE.Mesh(new THREE.BoxGeometry(13,.22,620),roadMat); roadMesh.position.set(0,0,-180); roadMesh.receiveShadow=true; road.add(roadMesh);
+for(const x of [-6.7,6.7]){const c=new THREE.Mesh(new THREE.BoxGeometry(.38,.25,620),curbMat);c.position.set(x,.12,-180);c.castShadow=true;road.add(c)}
+const dashes=[]; for(let z=8;z>-610;z-=10){for(const x of [-2.15,2.15]){let m=new THREE.Mesh(new THREE.BoxGeometry(.16,.035,4.5),lineMat);m.position.set(x,.14,z);road.add(m);dashes.push(m)}}
+
+function car(color=0x00bfff){const g=new THREE.Group();
+ const body=new THREE.Mesh(new THREE.BoxGeometry(2.05,.62,4.1),mat(color,.28,.35));body.position.y=.62;body.castShadow=true;g.add(body);
+ const hood=new THREE.Mesh(new THREE.BoxGeometry(1.72,.28,1.2),mat(color,.22,.4));hood.position.set(0,.98,1.2);hood.castShadow=true;g.add(hood);
+ const cabin=new THREE.Mesh(new THREE.BoxGeometry(1.55,.65,1.75),mat(0x071421,.08,.65));cabin.position.set(0,1.13,-.35);cabin.rotation.x=-.06;cabin.castShadow=true;g.add(cabin);
+ const windshield=new THREE.Mesh(new THREE.BoxGeometry(1.38,.035,.72),mat(0x4fd8ff,.08,.55));windshield.position.set(0,1.16,.45);windshield.rotation.x=-.48;g.add(windshield);
+ const wheelMat=mat(0x090a0d,.85,.1); for(const x of [-1.05,1.05])for(const z of [-1.25,1.25]){let w=new THREE.Mesh(new THREE.CylinderGeometry(.48,.48,.28,18),wheelMat);w.rotation.z=Math.PI/2;w.position.set(x,.48,z);w.castShadow=true;g.add(w)}
+ const lightMat=mat(0xffffff,.2,.2); for(const x of [-.62,.62]){let l=new THREE.Mesh(new THREE.BoxGeometry(.38,.14,.08),lightMat);l.position.set(x,.82,2.06);g.add(l)}
+ const red=mat(0xff172f,.25,.1);for(const x of [-.62,.62]){let l=new THREE.Mesh(new THREE.BoxGeometry(.38,.14,.08),red);l.position.set(x,.78,-2.06);g.add(l)}
+ return g;}
+const player=car(0x00bfff); player.position.set(0,0,5); world.add(player);
+
+const lanes=[-4.2,-1.4,1.4,4.2]; const enemies=[]; const coins=[];
+function spawnEnemy(){let lane=lanes[Math.floor(Math.random()*lanes.length)]; if(enemies.some(e=>Math.abs(e.mesh.position.x-lane)<.2&&e.mesh.position.z>-80))return;let m=car([0xff334d,0xffa000,0x24e878,0x9b65ff][Math.floor(Math.random()*4)]);m.scale.setScalar(.86);m.position.set(lane,.02,-130-Math.random()*100);traffic.add(m);enemies.push({mesh:m,speed:16+Math.random()*12});}
+function spawnCoin(){let m=new THREE.Mesh(new THREE.TorusGeometry(.38,.11,10,24),mat(0xffd21c,.25,.65));m.rotation.x=Math.PI/2;m.position.set(lanes[Math.floor(Math.random()*lanes.length)],1,-150-Math.random()*90);fx.add(m);coins.push(m)}
+
+const keys={l:false,r:false,n:false}; let running=false,paused=false,score=0,coinCount=0,hp=3,nitro=100,best=Number(localStorage.getItem('sr3dBest')||0),speed=48,spawnT=0,coinT=0,shake=0,quality=2;
+function setKey(id,v){keys[id]=v} [['left','l'],['right','r'],['nitroBtn','n']].forEach(([id,k])=>{let b=document.getElementById(id);b.onpointerdown=e=>{e.preventDefault();setKey(k,true)};b.onpointerup=b.onpointercancel=b.onpointerleave=e=>setKey(k,false)});
+addEventListener('keydown',e=>{if(e.key==='ArrowLeft'||e.key.toLowerCase()==='a')keys.l=true;if(e.key==='ArrowRight'||e.key.toLowerCase()==='d')keys.r=true;if(e.code==='Space')keys.n=true;if(e.key.toLowerCase()==='p')togglePause()});addEventListener('keyup',e=>{if(e.key==='ArrowLeft'||e.key.toLowerCase()==='a')keys.l=false;if(e.key==='ArrowRight'||e.key.toLowerCase()==='d')keys.r=false;if(e.code==='Space')keys.n=false});
+function updateHud(){scoreEl.textContent=Math.floor(score);coinsEl.textContent=coinCount;hpEl.textContent=hp;speedEl.textContent=Math.floor(speed);nitroEl.style.width=nitro+'%'}
+const scoreEl=document.getElementById('score'),coinsEl=document.getElementById('coins'),hpEl=document.getElementById('hp'),speedEl=document.getElementById('speed'),nitroEl=document.getElementById('nitro');
+function start(){document.getElementById('menu').classList.add('hidden');document.getElementById('gameover').style.display='none';document.getElementById('hud').classList.remove('hidden');document.getElementById('pause').classList.remove('hidden');running=true;paused=false;score=0;coinCount=0;hp=3;nitro=100;player.position.x=0;for(const e of enemies)e.mesh.removeFromParent();enemies.length=0;for(const c of coins)c.removeFromParent();coins.length=0;updateHud()}
+function end(){running=false;document.getElementById('pause').classList.add('hidden');document.getElementById('hud').classList.add('hidden');best=Math.max(best,Math.floor(score));localStorage.setItem('sr3dBest',best);document.getElementById('finalScore').textContent=Math.floor(score);document.getElementById('best').textContent=best;document.getElementById('gameover').style.display='grid'}
+function togglePause(){if(!running)return;paused=!paused;document.getElementById('pause').textContent=paused?'▶ متابعة':'⏸ إيقاف'}
+function hit(e){if(e.hit)return;e.hit=true;hp--;shake=.45;e.mesh.position.z=30; if(hp<=0)end();updateHud()}
+
+document.getElementById('start').onclick=start;document.getElementById('again').onclick=start;document.getElementById('home').onclick=()=>{document.getElementById('gameover').style.display='none';document.getElementById('menu').classList.remove('hidden')};document.getElementById('pause').onclick=togglePause;
+document.getElementById('quality').onclick=()=>{quality=(quality+1)%3;document.getElementById('quality').textContent='جودة: '+['منخفضة','متوسطة','عالية'][quality];renderer.setPixelRatio(Math.min(devicePixelRatio,[1,1.5,2][quality]))};
+
+const clock=new THREE.Clock(); function loop(){requestAnimationFrame(loop);const dt=Math.min(clock.getDelta(),.035); if(running&&!paused){let boost=keys.n&&nitro>0;if(boost){speed=92;nitro=Math.max(0,nitro-dt*27)}else{speed=52+Math.min(score/90,20);nitro=Math.min(100,nitro+dt*7)}
+ let steer=(keys.l?-1:0)+(keys.r?1:0);player.position.x+=steer*8.5*dt;player.position.x=THREE.MathUtils.clamp(player.position.x,-5.1,5.1);player.rotation.z=THREE.MathUtils.lerp(player.rotation.z,-steer*.08,.16);player.rotation.y=THREE.MathUtils.lerp(player.rotation.y,steer*.045,.16);
+ const dz=speed*dt;score+=dt*speed*.55;spawnT-=dt;coinT-=dt;if(spawnT<=0){spawnEnemy();spawnT=.65+Math.random()*.65}if(coinT<=0){spawnCoin();coinT=.7+Math.random()*.8}
+ dashes.forEach(d=>{d.position.z+=dz;if(d.position.z>15)d.position.z-=620});
+ enemies.forEach(e=>{e.mesh.position.z+=dz-e.speed*dt;e.mesh.rotation.y+=dt*.08;if(e.mesh.position.z>18)e.mesh.position.z-=280;let dx=Math.abs(e.mesh.position.x-player.position.x);let dz2=Math.abs(e.mesh.position.z-player.position.z);if(dx<1.65&&dz2<3.1)hit(e)});
+ for(let i=coins.length-1;i>=0;i--){let c=coins[i];c.position.z+=dz;c.rotation.z+=dt*6;if(c.position.z>18){c.removeFromParent();coins.splice(i);continue}if(Math.abs(c.position.x-player.position.x)<1.5&&Math.abs(c.position.z-player.position.z)<2.8){coinCount++;score+=25;c.removeFromParent();coins.splice(i)}}
+ shake=Math.max(0,shake-dt);camera.position.x=THREE.MathUtils.lerp(camera.position.x,(Math.random()-.5)*shake*1.5,.3);camera.position.y=4.2+(Math.random()-.5)*shake*.7;camera.position.z=11;camera.lookAt(player.position.x*.18,1,-28);updateHud()}
+ renderer.render(scene,camera)}loop();
+addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
+</script></body></html>
