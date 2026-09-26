@@ -1,0 +1,885 @@
+```html
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Speed Race</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+ margin:0;
+ font-family:Arial,Tahoma,sans-serif;
+ background:linear-gradient(135deg,#050812,#101b35);
+ color:white;
+ text-align:center;
+}
+
+.screen{
+ min-height:100vh;
+ display:flex;
+ justify-content:center;
+ align-items:center;
+ padding:25px;
+}
+
+.panel{
+ width:100%;
+ max-width:850px;
+ background:#10182a;
+ border:1px solid #293653;
+ border-radius:25px;
+ padding:35px;
+ box-shadow:0 20px 60px #0008;
+}
+
+h1{
+ font-size:60px;
+ margin:5px 0 10px;
+}
+
+h1 span{color:#00d9ff}
+
+.subtitle{
+ color:#aeb9cf;
+ font-size:18px;
+ margin-bottom:30px;
+}
+
+button{
+ border:0;
+ border-radius:12px;
+ padding:15px 25px;
+ font-size:18px;
+ font-weight:bold;
+ cursor:pointer;
+ margin:7px;
+ transition:.2s;
+}
+
+button:hover{transform:translateY(-3px)}
+
+.primary{
+ background:#00d9ff;
+ color:#061019;
+}
+
+.pink{
+ background:#ff3d71;
+ color:white;
+}
+
+.green{
+ background:#20d47b;
+ color:#061019;
+}
+
+.cards{
+ display:flex;
+ justify-content:center;
+ gap:15px;
+ flex-wrap:wrap;
+ margin:25px 0;
+}
+
+.card{
+ background:#18233a;
+ border:2px solid transparent;
+ border-radius:15px;
+ padding:20px;
+ width:170px;
+ cursor:pointer;
+}
+
+.card.selected{
+ border-color:#00d9ff;
+}
+
+.carIcon{
+ font-size:55px;
+}
+
+.lock{
+ opacity:.4;
+}
+
+.stats{
+ display:flex;
+ justify-content:center;
+ gap:20px;
+ flex-wrap:wrap;
+ margin:20px;
+}
+
+.stat{
+ background:#18233a;
+ padding:12px 20px;
+ border-radius:12px;
+}
+
+#gameScreen{
+ display:none;
+ padding:10px;
+}
+
+.gameTop{
+ width:100%;
+ max-width:520px;
+ margin:auto;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ gap:8px;
+ flex-wrap:wrap;
+}
+
+.gameTop div{
+ background:#111a2d;
+ padding:9px 13px;
+ border-radius:10px;
+}
+
+canvas{
+ display:block;
+ width:min(500px,95vw);
+ height:auto;
+ max-height:78vh;
+ margin:10px auto;
+ background:#25733c;
+ border:3px solid #00d9ff;
+ border-radius:12px;
+}
+
+.controls{
+ display:flex;
+ justify-content:center;
+ gap:20px;
+}
+
+.control{
+ width:90px;
+ height:55px;
+ font-size:25px;
+}
+
+.hidden{display:none!important}
+
+#message{
+ font-size:22px;
+ margin:10px;
+}
+
+@media(max-width:600px){
+ h1{font-size:42px}
+ .panel{padding:20px}
+ .card{width:135px}
+}
+</style>
+</head>
+
+<body>
+
+<!-- القائمة الرئيسية -->
+
+<div id="menu" class="screen">
+<div class="panel">
+
+<div style="font-size:80px">🏎️</div>
+
+<h1>Speed <span>Race</span></h1>
+
+<p class="subtitle">
+أسرع لعبة سباق! اختر سيارتك، اجمع العملات،
+واستخدم النيترو لتصبح أسرع متسابق.
+</p>
+
+<div class="stats">
+<div class="stat">💰 العملات: <b id="coins">0</b></div>
+<div class="stat">🏆 أفضل نتيجة: <b id="best">0</b></div>
+</div>
+
+<h2>🚗 اختر سيارتك</h2>
+
+<div class="cards">
+
+<div class="card selected" data-car="0">
+<div class="carIcon">🏎️</div>
+<b>البرق</b>
+<p>سرعة ⭐⭐⭐</p>
+</div>
+
+<div class="card" data-car="1">
+<div class="carIcon">🚗</div>
+<b>الأسطورة</b>
+<p>سرعة ⭐⭐⭐⭐</p>
+</div>
+
+<div class="card" data-car="2">
+<div class="carIcon">🚙</div>
+<b>الصاروخ</b>
+<p>سرعة ⭐⭐⭐⭐⭐</p>
+</div>
+
+</div>
+
+<h2>🏁 اختر المرحلة</h2>
+
+<div class="cards">
+
+<div class="card selected" data-level="1">
+<div class="carIcon">🌆</div>
+<b>المدينة</b>
+<p>سهلة</p>
+</div>
+
+<div class="card" data-level="2">
+<div class="carIcon">🌵</div>
+<b>الصحراء</b>
+<p>متوسطة</p>
+</div>
+
+<div class="card" data-level="3">
+<div class="carIcon">❄️</div>
+<b>الجليد</b>
+<p>صعبة</p>
+</div>
+
+</div>
+
+<button class="primary" onclick="startGame()">
+🎮 ابدأ السباق
+</button>
+
+<br>
+
+<button class="pink" onclick="showDownload()">
+⬇️ تحميل اللعبة
+</button>
+
+</div>
+</div>
+
+
+<!-- شاشة اللعبة -->
+
+<div id="gameScreen">
+
+<div class="gameTop">
+
+<div>🏆 <span id="score">0</span></div>
+
+<div>💰 <span id="gameCoins">0</span></div>
+
+<div>❤️ <span id="lives">3</span></div>
+
+<div>⚡ <span id="nitro">100</span>%</div>
+
+<button class="pink" onclick="backMenu()">خروج</button>
+
+</div>
+
+<div id="message"></div>
+
+<canvas id="canvas" width="500" height="700"></canvas>
+
+<div class="controls">
+
+<button class="control" id="left">⬅️</button>
+
+<button class="control green" id="nitroButton">⚡</button>
+
+<button class="control" id="right">➡️</button>
+
+</div>
+
+<p>استخدم ← → للتحرك و ⚡ للنيترو</p>
+
+</div>
+
+
+<script>
+
+const canvas=document.getElementById("canvas");
+const ctx=canvas.getContext("2d");
+
+let selectedCar=0;
+let selectedLevel=1;
+
+let coins=Number(localStorage.getItem("raceCoins")||0);
+let best=Number(localStorage.getItem("raceBest")||0);
+
+document.getElementById("coins").textContent=coins;
+document.getElementById("best").textContent=best;
+
+let running=false;
+let score=0;
+let gameCoins=0;
+let lives=3;
+let nitro=100;
+
+let keys={
+ left:false,
+ right:false,
+ nitro:false
+};
+
+let player;
+let enemies=[];
+let coinObjects=[];
+
+let spawnTimer=0;
+let coinTimer=0;
+let roadOffset=0;
+let animation;
+
+
+const cars=[
+ {
+  color:"#00aaff",
+  speed:5
+ },
+ {
+  color:"#ff3d71",
+  speed:6
+ },
+ {
+  color:"#20d47b",
+  speed:7
+ }
+];
+
+
+document.querySelectorAll("[data-car]").forEach(card=>{
+
+ card.addEventListener("click",()=>{
+
+  document.querySelectorAll("[data-car]")
+  .forEach(x=>x.classList.remove("selected"));
+
+  card.classList.add("selected");
+
+  selectedCar=Number(card.dataset.car);
+
+ });
+
+});
+
+
+document.querySelectorAll("[data-level]").forEach(card=>{
+
+ card.addEventListener("click",()=>{
+
+  document.querySelectorAll("[data-level]")
+  .forEach(x=>x.classList.remove("selected"));
+
+  card.classList.add("selected");
+
+  selectedLevel=Number(card.dataset.level);
+
+ });
+
+});
+
+
+function startGame(){
+
+ document.getElementById("menu").style.display="none";
+ document.getElementById("gameScreen").style.display="block";
+
+ score=0;
+ gameCoins=0;
+ lives=3;
+ nitro=100;
+
+ enemies=[];
+ coinObjects=[];
+
+ player={
+  x:225,
+  y:570,
+  width:50,
+  height:80
+ };
+
+ document.getElementById("message").textContent="";
+ updateHUD();
+
+ running=true;
+
+ cancelAnimationFrame(animation);
+
+ animation=requestAnimationFrame(loop);
+}
+
+
+function backMenu(){
+
+ running=false;
+
+ cancelAnimationFrame(animation);
+
+ document.getElementById("gameScreen").style.display="none";
+ document.getElementById("menu").style.display="flex";
+
+}
+
+
+function updateHUD(){
+
+ document.getElementById("score").textContent=score;
+ document.getElementById("gameCoins").textContent=gameCoins;
+ document.getElementById("lives").textContent=lives;
+ document.getElementById("nitro").textContent=Math.floor(nitro);
+
+}
+
+
+function spawnEnemy(){
+
+ const lanes=[65,165,265,365];
+
+ const lane=lanes[Math.floor(Math.random()*lanes.length)];
+
+ enemies.push({
+  x:lane,
+  y:-100,
+  width:50,
+  height:80,
+  speed:3+selectedLevel+score/500
+ });
+
+}
+
+
+function spawnCoin(){
+
+ const lanes=[75,175,275,375];
+
+ const lane=lanes[Math.floor(Math.random()*lanes.length)];
+
+ coinObjects.push({
+  x:lane,
+  y:-30,
+  r:13
+ });
+
+}
+
+
+function collision(a,b){
+
+ return(
+  a.x < b.x+b.width &&
+  a.x+a.width > b.x &&
+  a.y < b.y+b.height &&
+  a.y+a.height > b.y
+ );
+
+}
+
+
+function update(){
+
+ let speed=cars[selectedCar].speed;
+
+ if(keys.nitro && nitro>0){
+
+  speed+=6;
+  nitro-=0.8;
+
+ }else{
+
+  nitro=Math.min(100,nitro+0.05);
+
+ }
+
+
+ if(keys.left){
+  player.x-=speed;
+ }
+
+ if(keys.right){
+  player.x+=speed;
+ }
+
+
+ player.x=Math.max(45,Math.min(405,player.x));
+
+
+ spawnTimer++;
+
+ if(spawnTimer>55-Math.min(score/100,20)){
+
+  spawnEnemy();
+  spawnTimer=0;
+
+ }
+
+
+ coinTimer++;
+
+ if(coinTimer>75){
+
+  spawnCoin();
+  coinTimer=0;
+
+ }
+
+
+ enemies.forEach(enemy=>{
+  enemy.y+=enemy.speed;
+ });
+
+
+ coinObjects.forEach(coin=>{
+  coin.y+=4+selectedLevel;
+ });
+
+
+ for(let i=enemies.length-1;i>=0;i--){
+
+  let enemy=enemies[i];
+
+  if(collision(player,enemy)){
+
+   enemies.splice(i,1);
+
+   lives--;
+
+   updateHUD();
+
+   if(lives<=0){
+
+    gameOver();
+
+    return;
+
+   }
+
+  }
+
+  if(enemy.y>720){
+
+   enemies.splice(i,1);
+
+   score+=10;
+
+  }
+
+ }
+
+
+ for(let i=coinObjects.length-1;i>=0;i--){
+
+  let coin=coinObjects[i];
+
+  let box={
+   x:coin.x,
+   y:coin.y,
+   width:26,
+   height:26
+  };
+
+  if(collision(player,box)){
+
+   coinObjects.splice(i,1);
+
+   gameCoins++;
+
+   score+=25;
+
+  }
+
+  else if(coin.y>720){
+
+   coinObjects.splice(i,1);
+
+  }
+
+ }
+
+
+ roadOffset+=5+selectedLevel;
+
+ updateHUD();
+
+}
+
+
+function drawRoad(){
+
+ let background;
+
+ if(selectedLevel===1){
+  background="#20763b";
+ }
+
+ if(selectedLevel===2){
+  background="#b58b42";
+ }
+
+ if(selectedLevel===3){
+  background="#b9d7e8";
+ }
+
+ ctx.fillStyle=background;
+ ctx.fillRect(0,0,500,700);
+
+ ctx.fillStyle="#343434";
+ ctx.fillRect(40,0,420,700);
+
+ ctx.fillStyle="#eeeeee";
+
+ ctx.fillRect(35,0,5,700);
+ ctx.fillRect(460,0,5,700);
+
+ let offset=roadOffset%90;
+
+ for(let y=-90+offset;y<700;y+=90){
+
+  ctx.fillRect(140,y,8,45);
+  ctx.fillRect(245,y,8,45);
+  ctx.fillRect(350,y,8,45);
+
+ }
+
+}
+
+
+function drawCar(car,color){
+
+ ctx.fillStyle=color;
+
+ ctx.fillRect(
+  car.x,
+  car.y,
+  car.width,
+  car.height
+ );
+
+ ctx.fillStyle="#c8f4ff";
+
+ ctx.fillRect(
+  car.x+8,
+  car.y+12,
+  34,
+  25
+ );
+
+ ctx.fillStyle="#111";
+
+ ctx.fillRect(
+  car.x+4,
+  car.y+8,
+  7,
+  20
+ );
+
+ ctx.fillRect(
+  car.x+39,
+  car.y+8,
+  7,
+  20
+ );
+
+ ctx.fillRect(
+  car.x+4,
+  car.y+55,
+  7,
+  20
+ );
+
+ ctx.fillRect(
+  car.x+39,
+  car.y+55,
+  7,
+  20
+ );
+
+}
+
+
+function draw(){
+
+ drawRoad();
+
+ drawCar(
+  player,
+  cars[selectedCar].color
+ );
+
+
+ enemies.forEach(enemy=>{
+
+  drawCar(enemy,"#e52d45");
+
+ });
+
+
+ coinObjects.forEach(coin=>{
+
+  ctx.fillStyle="#ffd21c";
+
+  ctx.beginPath();
+
+  ctx.arc(
+   coin.x+13,
+   coin.y+13,
+   coin.r,
+   0,
+   Math.PI*2
+  );
+
+  ctx.fill();
+
+  ctx.fillStyle="#9b6500";
+
+  ctx.font="bold 15px Arial";
+
+  ctx.fillText(
+   "$",
+   coin.x+8,
+   coin.y+19
+  );
+
+ });
+
+
+ if(keys.nitro && nitro>0){
+
+  ctx.fillStyle="#00d9ff";
+
+  ctx.beginPath();
+
+  ctx.moveTo(player.x+15,player.y+80);
+  ctx.lineTo(player.x+25,player.y+105);
+  ctx.lineTo(player.x+35,player.y+80);
+
+  ctx.fill();
+
+ }
+
+}
+
+
+function loop(){
+
+ if(!running)return;
+
+ update();
+
+ draw();
+
+ animation=requestAnimationFrame(loop);
+
+}
+
+
+function gameOver(){
+
+ running=false;
+
+ cancelAnimationFrame(animation);
+
+ if(score>best){
+
+  best=score;
+
+  localStorage.setItem("raceBest",best);
+
+ }
+
+
+ coins+=gameCoins;
+
+ localStorage.setItem("raceCoins",coins);
+
+ document.getElementById("message").innerHTML=
+ `
+ <strong>🏁 انتهى السباق!</strong><br>
+ النتيجة: ${score}<br>
+ العملات التي جمعتها: ${gameCoins}<br><br>
+ <button class="primary" onclick="startGame()">🔄 إعادة السباق</button>
+ <button class="pink" onclick="backMenu()">🏠 القائمة</button>
+ `;
+
+ document.getElementById("coins").textContent=coins;
+ document.getElementById("best").textContent=best;
+
+}
+
+
+function showDownload(){
+
+ alert(
+  "زر التحميل جاهز.\\n\\n"+
+  "عندما ترفع اللعبة على الإنترنت، "+
+  "يمكن وضع رابط ملف ZIP أو EXE هنا."
+ );
+
+}
+
+
+function setKey(type,value){
+
+ keys[type]=value;
+
+}
+
+
+function buttonControl(id,type){
+
+ const button=document.getElementById(id);
+
+ button.addEventListener("pointerdown",e=>{
+  e.preventDefault();
+  setKey(type,true);
+ });
+
+ button.addEventListener("pointerup",e=>{
+  e.preventDefault();
+  setKey(type,false);
+ });
+
+ button.addEventListener("pointercancel",()=>{
+  setKey(type,false);
+ });
+
+ button.addEventListener("pointerleave",()=>{
+  setKey(type,false);
+ });
+
+}
+
+
+buttonControl("left","left");
+buttonControl("right","right");
+buttonControl("nitroButton","nitro");
+
+
+document.addEventListener("keydown",e=>{
+
+ if(e.key==="ArrowLeft")keys.left=true;
+ if(e.key==="ArrowRight")keys.right=true;
+
+ if(e.code==="Space")keys.nitro=true;
+
+});
+
+
+document.addEventListener("keyup",e=>{
+
+ if(e.key==="ArrowLeft")keys.left=false;
+ if(e.key==="ArrowRight")keys.right=false;
+
+ if(e.code==="Space")keys.nitro=false;
+
+});
+
+</script>
+
+</body>
+</html>
+```
