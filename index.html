@@ -2,312 +2,535 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+
 <title>Speed Race X</title>
 
 <style>
-*{box-sizing:border-box}
 
-body{
-    margin:0;
-    background:linear-gradient(135deg,#06101d,#162746);
-    color:white;
-    font-family:Arial,Tahoma,sans-serif;
-    text-align:center;
+*{
+box-sizing:border-box;
 }
 
-.menu{
-    min-height:100vh;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:20px;
-}
-
-.panel{
-    width:min(900px,95vw);
-    background:#101a2d;
-    padding:30px;
-    border-radius:25px;
-    box-shadow:0 20px 70px #000;
-}
-
-.logo{
-    font-size:70px;
-}
-
-h1{
-    font-size:55px;
-    margin:5px;
-}
-
-h1 span{
-    color:#00e5ff;
+html,body{
+margin:0;
+padding:0;
+min-height:100%;
+font-family:Arial,Tahoma,sans-serif;
+background:linear-gradient(135deg,#050b15,#172b4a);
+color:white;
+text-align:center;
 }
 
 button,a{
-    border:0;
-    border-radius:12px;
-    padding:14px 22px;
-    margin:7px;
-    font-size:17px;
-    font-weight:bold;
-    cursor:pointer;
-    text-decoration:none;
-}
-
-.start{
-    background:#00e5ff;
-    color:#00131a;
-}
-
-.download{
-    background:#21e787;
-    color:#00150c;
-}
-
-.exit{
-    background:#ff3d71;
-    color:white;
-}
-
-.cards{
-    display:flex;
-    justify-content:center;
-    flex-wrap:wrap;
-    gap:12px;
-}
-
-.card{
-    width:150px;
-    padding:15px;
-    background:#192840;
-    border:2px solid #30445f;
-    border-radius:16px;
-    cursor:pointer;
-}
-
-.card.selected{
-    border-color:#00e5ff;
-    box-shadow:0 0 20px #00e5ff55;
-}
-
-.car{
-    font-size:50px;
-}
-
-.stats{
-    margin:20px;
-}
-
-.stat{
-    display:inline-block;
-    background:#18263d;
-    padding:12px 20px;
-    border-radius:12px;
-    margin:5px;
-}
-
-#game{
-    padding:10px;
+font-family:inherit;
 }
 
 .hidden{
-    display:none!important;
+display:none!important;
 }
 
-.top{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    gap:8px;
-    flex-wrap:wrap;
+
+/* ================= MENU ================= */
+
+#menu{
+min-height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+padding:20px;
+}
+
+.panel{
+width:min(950px,96vw);
+padding:30px;
+background:rgba(10,20,38,.96);
+border:1px solid #304766;
+border-radius:28px;
+box-shadow:0 25px 80px rgba(0,0,0,.7);
+}
+
+.logo{
+font-size:75px;
+filter:drop-shadow(0 0 20px #00e5ff);
+}
+
+h1{
+font-size:clamp(42px,8vw,70px);
+margin:0 0 8px;
+}
+
+h1 span{
+color:#00e5ff;
+text-shadow:0 0 20px #00e5ff;
+}
+
+.subtitle{
+color:#aabbd0;
+font-size:17px;
+}
+
+.stats{
+display:flex;
+justify-content:center;
+gap:10px;
+flex-wrap:wrap;
+margin:20px;
+}
+
+.stat{
+background:#172840;
+border:1px solid #334c6d;
+padding:12px 22px;
+border-radius:13px;
+font-size:18px;
+}
+
+.stat b{
+color:#00e5ff;
+}
+
+.cards{
+display:flex;
+justify-content:center;
+gap:12px;
+flex-wrap:wrap;
+}
+
+.card{
+width:165px;
+padding:16px;
+background:linear-gradient(145deg,#1b2b45,#101d31);
+border:2px solid #304766;
+border-radius:18px;
+cursor:pointer;
+transition:.2s;
+}
+
+.card:hover{
+transform:translateY(-4px);
+border-color:#00e5ff;
+}
+
+.card.selected{
+border-color:#00e5ff;
+box-shadow:0 0 25px rgba(0,229,255,.25);
+}
+
+.carEmoji{
+font-size:55px;
+}
+
+.card p{
+margin:7px 0;
+color:#aebdd0;
+}
+
+.mainButtons{
+margin-top:25px;
+}
+
+.btn{
+display:inline-block;
+border:0;
+border-radius:13px;
+padding:14px 24px;
+margin:6px;
+font-size:17px;
+font-weight:bold;
+cursor:pointer;
+text-decoration:none;
+}
+
+.start{
+background:#00e5ff;
+color:#001018;
+box-shadow:0 0 20px rgba(0,229,255,.25);
+}
+
+.download{
+background:#21e787;
+color:#00140b;
+}
+
+.pink{
+background:#ff3d71;
+color:white;
+}
+
+.dark{
+background:#1a2b44;
+color:white;
+border:1px solid #385270;
+}
+
+.help{
+color:#8fa4bf;
+font-size:13px;
+margin-top:20px;
+}
+
+
+/* ================= GAME ================= */
+
+#game{
+min-height:100vh;
+padding:8px;
+}
+
+.topbar{
+max-width:700px;
+margin:auto;
+display:flex;
+justify-content:center;
+align-items:center;
+gap:7px;
+flex-wrap:wrap;
 }
 
 .badge{
-    background:#101c31;
-    border:1px solid #304461;
-    padding:9px 13px;
-    border-radius:10px;
+background:rgba(9,20,37,.95);
+border:1px solid #304765;
+border-radius:11px;
+padding:9px 13px;
+font-weight:bold;
 }
 
 .badge b{
-    color:#00e5ff;
+color:#00e5ff;
+}
+
+#status{
+height:22px;
+margin:5px;
+color:#aabbd0;
+font-size:13px;
 }
 
 #canvas{
-    display:block;
-    width:min(520px,96vw);
-    height:auto;
-    margin:10px auto;
-    border:3px solid #00e5ff;
-    border-radius:15px;
-    background:#333;
-    touch-action:none;
+display:block;
+width:min(520px,96vw);
+height:auto;
+margin:8px auto;
+border:3px solid #00e5ff;
+border-radius:16px;
+background:#333;
+box-shadow:
+0 15px 50px rgba(0,0,0,.8),
+0 0 25px rgba(0,229,255,.15);
+touch-action:none;
 }
 
 .controls{
-    display:flex;
-    justify-content:center;
-    gap:15px;
-    direction:ltr;
+display:flex;
+justify-content:center;
+align-items:center;
+gap:15px;
+direction:ltr;
 }
 
 .control{
-    width:90px;
-    height:55px;
-    background:#17263d;
-    color:white;
+width:92px;
+height:58px;
+border:1px solid #3c5778;
+border-radius:14px;
+background:#15263e;
+color:white;
+font-size:25px;
+font-weight:bold;
+touch-action:none;
 }
 
-.nitro{
-    background:#21e787;
-    color:#00150c;
+.control:active{
+transform:scale(.94);
 }
 
-.status{
-    color:#aabbd2;
+.nitroButton{
+background:#21e787;
+color:#00150c;
 }
 
-.modal{
-    position:fixed;
-    inset:0;
-    background:#000b;
-    display:flex;
-    justify-content:center;
-    align-items:center;
+
+/* ================= MODAL ================= */
+
+#modal{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.78);
+display:flex;
+align-items:center;
+justify-content:center;
+z-index:50;
 }
 
 .modalBox{
-    background:#101a2d;
-    padding:30px;
-    border-radius:20px;
-    width:min(450px,90vw);
+width:min(500px,92vw);
+padding:30px;
+background:#101c31;
+border:1px solid #395475;
+border-radius:22px;
+box-shadow:0 20px 70px #000;
 }
+
+.modalBox h2{
+font-size:30px;
+}
+
+
+/* MOBILE */
+
+@media(max-width:600px){
+
+.panel{
+padding:20px 12px;
+}
+
+.card{
+width:140px;
+}
+
+h1{
+font-size:43px;
+}
+
+.control{
+width:82px;
+}
+
+}
+
 </style>
 </head>
 
+
 <body>
 
-<!-- القائمة -->
-<div id="menu" class="menu">
+
+<!-- =====================================================
+                         MENU
+===================================================== -->
+
+<div id="menu">
 
 <div class="panel">
 
-<div class="logo">🏎️</div>
+<div class="logo">
+🏎️
+</div>
 
-<h1>Speed <span>Race X</span></h1>
+<h1>
+Speed <span>Race X</span>
+</h1>
 
-<p>لعبة سباق سيارات مطورة 🚀</p>
+<p class="subtitle">
+لعبة سباق سيارات مطورة 🚀
+</p>
+
 
 <div class="stats">
 
 <div class="stat">
-💰 <b id="coins">0</b>
+💰 العملات:
+<b id="coins">0</b>
 </div>
 
 <div class="stat">
-🏆 <b id="best">0</b>
+🏆 أفضل نتيجة:
+<b id="best">0</b>
 </div>
 
 </div>
 
-<h2>🚘 اختر السيارة</h2>
+
+<h2>
+🚘 اختر سيارتك
+</h2>
 
 <div id="cars" class="cards"></div>
 
-<h2>🏁 اختر المرحلة</h2>
+
+<h2>
+🏁 اختر المرحلة
+</h2>
 
 <div id="levels" class="cards"></div>
 
-<br>
 
-<button class="start" onclick="startGame()">
+<div class="mainButtons">
+
+<button
+class="btn start"
+onclick="startGame()">
+
 🎮 ابدأ السباق
+
 </button>
 
-<a class="download" href="SpeedRace.zip" download>
+
+<a
+class="btn download"
+href="SpeedRace.zip"
+download>
+
 ⬇️ تحميل اللعبة
+
 </a>
 
-<p>
-⬅️ ➡️ للحركة — Space للنيترو — P للإيقاف
+</div>
+
+
+<p class="help">
+
+⌨️ الكمبيوتر:
+← → أو A / D للحركة
+<br>
+
+⚡ Space = نيترو
+<br>
+
+⏸️ P = إيقاف مؤقت
+
 </p>
 
 </div>
+
 </div>
 
 
-<!-- اللعبة -->
+
+<!-- =====================================================
+                         GAME
+===================================================== -->
 
 <div id="game" class="hidden">
 
-<div class="top">
+
+<div class="topbar">
+
 
 <div class="badge">
-🏆 <b id="score">0</b>
+🏆
+<b id="score">0</b>
 </div>
+
 
 <div class="badge">
-💰 <b id="runCoins">0</b>
+💰
+<b id="runCoins">0</b>
 </div>
+
 
 <div class="badge">
-❤️ <b id="health">3</b>
+❤️
+<b id="health">3</b>
 </div>
+
 
 <div class="badge">
-⚡ <b id="nitroValue">100</b>%
+⚡
+<b id="nitroValue">100</b>%
 </div>
 
-<button onclick="pauseGame()">
+
+<button
+class="btn dark"
+onclick="pauseGame()">
+
 ⏸️
+
 </button>
 
-<button class="exit" onclick="quitGame()">
+
+<button
+class="btn pink"
+onclick="quitGame()">
+
 خروج
+
 </button>
 
 </div>
 
-<div class="status" id="status">
+
+<div id="status">
+
 جاهز للسباق 🏎️
+
 </div>
 
-<canvas id="canvas" width="520" height="760"></canvas>
+
+<canvas
+id="canvas"
+width="520"
+height="760">
+</canvas>
+
 
 <div class="controls">
 
-<button class="control" id="left">
+
+<button
+class="control"
+id="left">
+
 ⬅️
+
 </button>
 
-<button class="control nitro" id="nitroButton">
+
+<button
+class="control nitroButton"
+id="nitroButton">
+
 ⚡
+
 </button>
 
-<button class="control" id="right">
+
+<button
+class="control"
+id="right">
+
 ➡️
+
 </button>
 
+
+</div>
+
+</div>
+
+
+
+<!-- =====================================================
+                         MODAL
+===================================================== -->
+
+<div
+id="modal"
+class="hidden">
+
+<div
+class="modalBox"
+id="modalBox">
 </div>
 
 </div>
 
-
-<!-- نافذة النهاية -->
-
-<div id="modal" class="modal hidden">
-
-<div class="modalBox" id="modalBox"></div>
-
-</div>
 
 
 <script>
 
-const canvas=document.getElementById("canvas");
-const ctx=canvas.getContext("2d");
+/* =====================================================
+                         CANVAS
+===================================================== */
+
+const canvas =
+document.getElementById("canvas");
+
+const ctx =
+canvas.getContext("2d");
+
 
 const W=520;
 const H=760;
@@ -315,7 +538,22 @@ const H=760;
 const roadX=55;
 const roadWidth=410;
 
-const lanes=[100,205,310,415];
+
+/* =====================================================
+                         LANES
+===================================================== */
+
+const lanes=[
+100,
+205,
+310,
+415
+];
+
+
+/* =====================================================
+                         CARS
+===================================================== */
 
 const cars=[
 
@@ -349,20 +587,25 @@ price:1200
 
 ];
 
+
+/* =====================================================
+                         LEVELS
+===================================================== */
+
 const levels=[
 
 {
 name:"المدينة",
 emoji:"🌆",
-background:"#27753f",
-road:"#363a3e",
+background:"#3f8c54",
+road:"#33383d",
 speed:1
 },
 
 {
 name:"الصحراء",
 emoji:"🌵",
-background:"#bd914d",
+background:"#c99a56",
 road:"#3b3937",
 speed:1.25
 },
@@ -370,25 +613,31 @@ speed:1.25
 {
 name:"الجليد",
 emoji:"❄️",
-background:"#a9d8e7",
-road:"#444c55",
+background:"#a9dbe9",
+road:"#414950",
 speed:1.5
 },
 
 {
 name:"الليل",
 emoji:"🌃",
-background:"#07162e",
-road:"#252b35",
+background:"#08162d",
+road:"#242b36",
 speed:1.8
 }
 
 ];
 
 
-let data=JSON.parse(
+/* =====================================================
+                         SAVE DATA
+===================================================== */
+
+let data =
+JSON.parse(
 localStorage.getItem("speedRaceX")
 );
+
 
 if(!data){
 
@@ -397,41 +646,75 @@ coins:0,
 best:0,
 car:0,
 level:0,
-owned:[true,false,false,false]
+owned:[
+true,
+false,
+false,
+false
+]
 };
 
 }
 
+
+/* =====================================================
+                         PLAYER
+===================================================== */
+
 let player={
+
 x:235,
 y:640,
+
 width:50,
 height:82
+
 };
 
+
+/* =====================================================
+                         GAME STATE
+===================================================== */
+
 let game={
+
 running:false,
 paused:false,
+
 score:0,
 coins:0,
 health:3,
 nitro:100,
+
 enemies:[],
 coinsObjects:[],
+
 roadMove:0,
+
 spawn:0,
-coinSpawn:0
+coinSpawn:0,
+
+shake:0
+
 };
 
+
 let keys={
+
 left:false,
 right:false,
 nitro:false
+
 };
+
 
 let animation=0;
 let lastTime=0;
 
+
+/* =====================================================
+                         SAVE
+===================================================== */
 
 function save(){
 
@@ -443,29 +726,51 @@ JSON.stringify(data)
 }
 
 
+/* =====================================================
+                         MENU
+===================================================== */
+
 function renderMenu(){
 
-document.getElementById("coins").textContent=data.coins;
+document.getElementById("coins")
+.textContent=data.coins;
 
-document.getElementById("best").textContent=data.best;
+document.getElementById("best")
+.textContent=data.best;
 
 
-document.getElementById("cars").innerHTML=
+/* CARS */
+
+document.getElementById("cars")
+.innerHTML=
+
 cars.map((car,i)=>`
 
-<div class="card ${data.car===i?"selected":""}"
+<div
+class="card
+${data.car===i?"selected":""}"
 onclick="chooseCar(${i})">
 
-<div class="car">🏎️</div>
+<div class="carEmoji">
+🏎️
+</div>
 
-<b>${car.name}</b>
-
-<p>⚡ ${car.speed}</p>
+<b>
+${car.name}
+</b>
 
 <p>
-${data.owned[i]
-?"✓ مملوكة"
-:"🔒 "+car.price+" 💰"}
+⚡ السرعة ${car.speed}
+</p>
+
+<p>
+${
+data.owned[i]
+?
+"✓ مملوكة"
+:
+"🔒 "+car.price+" 💰"
+}
 </p>
 
 </div>
@@ -473,15 +778,32 @@ ${data.owned[i]
 `).join("");
 
 
-document.getElementById("levels").innerHTML=
+/* LEVELS */
+
+document.getElementById("levels")
+.innerHTML=
+
 levels.map((level,i)=>`
 
-<div class="card ${data.level===i?"selected":""}"
+<div
+class="card
+${data.level===i?"selected":""}"
 onclick="chooseLevel(${i})">
 
-<div class="car">${level.emoji}</div>
+<div class="carEmoji">
+${level.emoji}
+</div>
 
-<b>${level.name}</b>
+<b>
+${level.name}
+</b>
+
+<p>
+${i===0?"مدينة":
+i===1?"صحراء":
+i===2?"جليد":
+"ليل"}
+</p>
 
 </div>
 
@@ -489,6 +811,10 @@ onclick="chooseLevel(${i})">
 
 }
 
+
+/* =====================================================
+                         CHOOSE CAR
+===================================================== */
 
 function chooseCar(i){
 
@@ -505,15 +831,34 @@ return;
 }
 
 
-if(data.coins<cars[i].price){
+if(data.coins < cars[i].price){
 
-alert(
-"تحتاج "+cars[i].price+" عملة لشراء هذه السيارة."
-);
+showModal(`
+
+<h2>
+🔒 السيارة مقفلة
+</h2>
+
+<p>
+تحتاج
+<b>${cars[i].price}</b>
+عملة لفتحها.
+</p>
+
+<button
+class="btn start"
+onclick="closeModal()">
+
+حسنًا
+
+</button>
+
+`);
 
 return;
 
 }
+
 
 data.coins-=cars[i].price;
 
@@ -528,6 +873,10 @@ renderMenu();
 }
 
 
+/* =====================================================
+                         CHOOSE LEVEL
+===================================================== */
+
 function chooseLevel(i){
 
 data.level=i;
@@ -538,6 +887,10 @@ renderMenu();
 
 }
 
+
+/* =====================================================
+                         START GAME
+===================================================== */
 
 function startGame(){
 
@@ -570,28 +923,35 @@ roadMove:0,
 
 spawn:0,
 
-coinSpawn:0
+coinSpawn:0,
+
+shake:0
 
 };
 
 
 player.x=235;
-
 player.y=640;
 
 
 document.getElementById("status")
-.textContent="السباق بدأ! 🏎️💨";
+.textContent=
+"السباق بدأ! 🏎️💨";
 
 
 lastTime=performance.now();
 
 cancelAnimationFrame(animation);
 
-animation=requestAnimationFrame(loop);
+animation=
+requestAnimationFrame(loop);
 
 }
 
+
+/* =====================================================
+                         QUIT
+===================================================== */
 
 function quitGame(){
 
@@ -610,35 +970,53 @@ renderMenu();
 }
 
 
+/* =====================================================
+                         PAUSE
+===================================================== */
+
 function pauseGame(){
 
-if(!game.running)return;
+if(!game.running)
+return;
+
 
 game.paused=!game.paused;
+
 
 if(game.paused){
 
 document.getElementById("status")
 .textContent="⏸️ اللعبة متوقفة";
 
-}else{
+return;
+
+}
+
 
 document.getElementById("status")
 .textContent="🏎️ السباق مستمر";
 
 lastTime=performance.now();
 
-animation=requestAnimationFrame(loop);
+animation=
+requestAnimationFrame(loop);
 
 }
 
-}
 
+/* =====================================================
+                         SPAWN ENEMY
+===================================================== */
 
 function spawnEnemy(){
 
-let lane=
-lanes[Math.floor(Math.random()*lanes.length)];
+const lane=
+lanes[
+Math.floor(
+Math.random()*lanes.length
+)
+];
+
 
 game.enemies.push({
 
@@ -647,7 +1025,6 @@ x:lane-25,
 y:-100,
 
 width:50,
-
 height:82,
 
 speed:
@@ -659,15 +1036,23 @@ levels[data.level].speed
 }
 
 
+/* =====================================================
+                         SPAWN COIN
+===================================================== */
+
 function spawnCoin(){
 
-let lane=
-lanes[Math.floor(Math.random()*lanes.length)];
+const lane=
+lanes[
+Math.floor(
+Math.random()*lanes.length
+)
+];
+
 
 game.coinsObjects.push({
 
 x:lane,
-
 y:-30
 
 });
@@ -675,13 +1060,20 @@ y:-30
 }
 
 
+/* =====================================================
+                         COLLISION
+===================================================== */
+
 function collision(a,b){
 
-return (
+return(
 
 a.x < b.x+b.width &&
+
 a.x+a.width > b.x &&
+
 a.y < b.y+b.height &&
+
 a.y+a.height > b.y
 
 );
@@ -689,13 +1081,27 @@ a.y+a.height > b.y
 }
 
 
+/* =====================================================
+                         UPDATE
+===================================================== */
+
 function update(dt){
 
-let car=cars[data.car];
+const car=
+cars[data.car];
+
+
+/* SPEED */
 
 let speed=car.speed;
 
-if(keys.nitro && game.nitro>0){
+
+/* NITRO */
+
+if(
+keys.nitro &&
+game.nitro>0
+){
 
 speed+=6;
 
@@ -707,30 +1113,59 @@ game.nitro+=8*dt;
 
 }
 
+
 game.nitro=
-Math.max(0,Math.min(100,game.nitro));
+Math.max(
+0,
+Math.min(
+100,
+game.nitro
+)
+);
 
 
-if(keys.left)
-player.x-=speed*60*dt;
+/* MOVEMENT */
 
-if(keys.right)
-player.x+=speed*60*dt;
+if(keys.left){
+
+player.x-=
+speed*60*dt;
+
+}
 
 
-player.x=Math.max(
+if(keys.right){
+
+player.x+=
+speed*60*dt;
+
+}
+
+
+/* ROAD LIMIT */
+
+player.x=
+Math.max(
 roadX+10,
 Math.min(
-roadX+roadWidth-player.width-10,
+roadX+
+roadWidth-
+player.width-
+10,
 player.x
 )
 );
 
 
-game.roadMove+=speed*60*dt;
+/* ROAD */
+
+game.roadMove+=
+speed*60*dt;
+
+
+/* SPAWN */
 
 game.spawn+=dt;
-
 game.coinSpawn+=dt;
 
 
@@ -752,19 +1187,30 @@ game.coinSpawn=0;
 }
 
 
+/* ENEMIES */
+
 game.enemies.forEach(enemy=>{
 
-enemy.y+=enemy.speed*60*dt;
+enemy.y+=
+enemy.speed*
+60*
+dt;
 
 });
 
+
+/* COINS */
 
 game.coinsObjects.forEach(c=>{
 
-c.y+=300*dt;
+c.y+=
+300*
+dt;
 
 });
 
+
+/* COLLISION ENEMIES */
 
 for(
 let i=game.enemies.length-1;
@@ -772,13 +1218,20 @@ i>=0;
 i--
 ){
 
-let enemy=game.enemies[i];
+let enemy=
+game.enemies[i];
 
-if(collision(player,enemy)){
+
+if(
+collision(player,enemy)
+){
 
 game.enemies.splice(i,1);
 
 game.health--;
+
+game.shake=12;
+
 
 if(game.health<=0){
 
@@ -788,7 +1241,12 @@ return;
 
 }
 
-}else if(enemy.y>H+100){
+}
+
+
+else if(
+enemy.y>H+100
+){
 
 game.enemies.splice(i,1);
 
@@ -799,25 +1257,35 @@ game.score+=20;
 }
 
 
+/* COINS */
+
 for(
 let i=game.coinsObjects.length-1;
 i>=0;
 i--
 ){
 
-let c=game.coinsObjects[i];
+let c=
+game.coinsObjects[i];
+
 
 let coinBox={
 
 x:c.x-12,
 y:c.y-12,
+
 width:24,
 height:24
 
 };
 
 
-if(collision(player,coinBox)){
+if(
+collision(
+player,
+coinBox
+)
+){
 
 game.coinsObjects.splice(i,1);
 
@@ -825,7 +1293,9 @@ game.coins++;
 
 game.score+=50;
 
-}else if(c.y>H){
+}
+
+else if(c.y>H){
 
 game.coinsObjects.splice(i,1);
 
@@ -834,40 +1304,204 @@ game.coinsObjects.splice(i,1);
 }
 
 
-game.score+=dt*15;
+/* SCORE */
+
+game.score+=
+dt*15;
+
 
 updateHUD();
 
 }
 
 
+/* =====================================================
+                         HUD
+===================================================== */
+
 function updateHUD(){
 
 document.getElementById("score")
-.textContent=Math.floor(game.score);
+.textContent=
+Math.floor(game.score);
 
 document.getElementById("runCoins")
-.textContent=game.coins;
+.textContent=
+game.coins;
 
 document.getElementById("health")
-.textContent=game.health;
+.textContent=
+game.health;
 
 document.getElementById("nitroValue")
-.textContent=Math.floor(game.nitro);
+.textContent=
+Math.floor(game.nitro);
 
 }
 
 
+/* =====================================================
+                         DRAW ROAD
+===================================================== */
+
 function drawRoad(){
 
-let level=levels[data.level];
-
-ctx.fillStyle=level.background;
-
-ctx.fillRect(0,0,W,H);
+const level=
+levels[data.level];
 
 
-ctx.fillStyle=level.road;
+/* SKY */
+
+let sky=
+ctx.createLinearGradient(
+0,
+0,
+0,
+H
+);
+
+
+if(data.level===0){
+
+sky.addColorStop(
+0,
+"#72b9e8"
+);
+
+sky.addColorStop(
+1,
+"#3d8d52"
+);
+
+}
+
+
+if(data.level===1){
+
+sky.addColorStop(
+0,
+"#f2c77b"
+);
+
+sky.addColorStop(
+1,
+"#d0954d"
+);
+
+}
+
+
+if(data.level===2){
+
+sky.addColorStop(
+0,
+"#d9f7ff"
+);
+
+sky.addColorStop(
+1,
+"#91cbdc"
+);
+
+}
+
+
+if(data.level===3){
+
+sky.addColorStop(
+0,
+"#050b20"
+);
+
+sky.addColorStop(
+1,
+"#142c52"
+);
+
+}
+
+
+ctx.fillStyle=sky;
+
+ctx.fillRect(
+0,
+0,
+W,
+H
+);
+
+
+/* GROUND */
+
+ctx.fillStyle=
+level.background;
+
+ctx.fillRect(
+0,
+180,
+W,
+H-180
+);
+
+
+/* ROAD SHADOW */
+
+ctx.fillStyle=
+"rgba(0,0,0,.25)";
+
+ctx.fillRect(
+roadX-18,
+0,
+18,
+H
+);
+
+ctx.fillRect(
+roadX+roadWidth,
+0,
+18,
+H
+);
+
+
+/* ROAD */
+
+let roadGradient=
+ctx.createLinearGradient(
+roadX,
+0,
+roadX+roadWidth,
+0
+);
+
+roadGradient.addColorStop(
+0,
+"#22262a"
+);
+
+roadGradient.addColorStop(
+.15,
+"#3b4045"
+);
+
+roadGradient.addColorStop(
+.5,
+"#303438"
+);
+
+roadGradient.addColorStop(
+.85,
+"#3b4045"
+);
+
+roadGradient.addColorStop(
+1,
+"#22262a"
+);
+
+
+ctx.fillStyle=
+roadGradient;
 
 ctx.fillRect(
 roadX,
@@ -877,31 +1511,116 @@ H
 );
 
 
-ctx.fillStyle="#ffffff";
+/* ROAD TEXTURE */
+
+for(
+let y=0;
+y<H;
+y+=14
+){
+
+ctx.fillStyle=
+"rgba(255,255,255,.025)";
 
 ctx.fillRect(
-roadX-7,
+roadX+
+10+
+Math.random()*
+(roadWidth-20),
+y,
+2,
+1
+);
+
+}
+
+
+/* EDGE */
+
+ctx.fillStyle="#eeeeee";
+
+ctx.fillRect(
+roadX-8,
 0,
-5,
+6,
 H
 );
 
 ctx.fillRect(
 roadX+roadWidth+2,
 0,
-5,
+6,
 H
 );
 
 
-let offset=game.roadMove%120;
+/* RED EDGE STRIPES */
+
+let stripeOffset=
+game.roadMove%80;
 
 
 for(
-let y=-120+offset;
+let y=-80+stripeOffset;
+y<H;
+y+=80
+){
+
+ctx.fillStyle="#d93636";
+
+ctx.fillRect(
+roadX-8,
+y,
+6,
+40
+);
+
+ctx.fillRect(
+roadX+roadWidth+2,
+y,
+6,
+40
+);
+
+}
+
+
+/* LANE MARKINGS */
+
+let laneOffset=
+game.roadMove%120;
+
+
+for(
+let y=-120+laneOffset;
 y<H;
 y+=120
 ){
+
+let mark=
+ctx.createLinearGradient(
+0,
+y,
+0,
+y+55
+);
+
+mark.addColorStop(
+0,
+"#eeeeee"
+);
+
+mark.addColorStop(
+.5,
+"#ffffff"
+);
+
+mark.addColorStop(
+1,
+"#cfcfcf"
+);
+
+ctx.fillStyle=mark;
 
 ctx.fillRect(
 188,
@@ -920,114 +1639,348 @@ y,
 }
 
 
+/* CITY */
+
 if(data.level===0){
 
-ctx.fillStyle="#5aaa45";
+/* buildings */
 
-for(let y=40;y<H;y+=90){
+for(
+let i=0;
+i<6;
+i++
+){
 
-ctx.beginPath();
+let x=
+i<3
+?
+i*55
+:
+350+(i-3)*55;
 
-ctx.arc(25,y,14,0,Math.PI*2);
+let height=
+100+
+(i%3)*35;
 
-ctx.fill();
 
-ctx.beginPath();
+ctx.fillStyle=
+i%2
+?
+"#6d7884"
+:
+"#53616e";
 
-ctx.arc(495,y+40,14,0,Math.PI*2);
 
-ctx.fill();
+ctx.fillRect(
+x,
+180-height,
+45,
+height
+);
+
+
+/* windows */
+
+ctx.fillStyle="#ffe477";
+
+for(
+let wy=195-height;
+wy<175;
+wy+=22
+){
+
+ctx.fillRect(
+x+8,
+wy,
+7,
+9
+);
+
+ctx.fillRect(
+x+28,
+wy,
+7,
+9
+);
 
 }
 
 }
 
+
+/* trees */
+
+for(
+let y=260;
+y<H;
+y+=110
+){
+
+drawTree(25,y);
+
+drawTree(
+495,
+y+45
+);
+
+}
+
+}
+
+
+/* DESERT */
 
 if(data.level===1){
 
-ctx.fillStyle="#d4a45f";
+ctx.fillStyle="#dca65c";
 
-for(let y=50;y<H;y+=100){
+for(
+let i=0;
+i<7;
+i++
+){
 
-ctx.fillRect(15,y,25,6);
+ctx.beginPath();
 
-ctx.fillRect(480,y+35,25,6);
+ctx.arc(
+i*100-20,
+190,
+90,
+Math.PI,
+Math.PI*2
+);
+
+ctx.fill();
+
+}
+
+
+for(
+let y=300;
+y<H;
+y+=130
+){
+
+drawRock(25,y);
+
+drawRock(
+490,
+y+40
+);
 
 }
 
 }
 
+
+/* ICE */
 
 if(data.level===2){
 
-ctx.fillStyle="white";
+ctx.fillStyle="#e8fbff";
 
-for(let y=30;y<H;y+=100){
+ctx.beginPath();
 
-ctx.fillRect(15,y,25,4);
+ctx.moveTo(
+0,
+210
+);
 
-ctx.fillRect(480,y+40,25,4);
+for(
+let x=0;
+x<=W;
+x+=70
+){
+
+ctx.lineTo(
+x,
+130+
+Math.sin(x)*30
+);
+
+}
+
+ctx.lineTo(W,240);
+ctx.lineTo(0,240);
+
+ctx.fill();
+
+
+ctx.fillStyle=
+"rgba(255,255,255,.45)";
+
+for(
+let y=280;
+y<H;
+y+=100
+){
+
+ctx.fillRect(
+15,
+y,
+30,
+3
+);
+
+ctx.fillRect(
+475,
+y+35,
+30,
+3
+);
 
 }
 
 }
 
+
+/* NIGHT */
 
 if(data.level===3){
 
 ctx.fillStyle="#ffffff";
 
-for(let i=0;i<35;i++){
+for(
+let i=0;
+i<45;
+i++
+){
+
+let x=
+(i*83)%W;
+
+let y=
+(i*137)%180;
+
+ctx.globalAlpha=
+.4+(i%4)*.15;
 
 ctx.fillRect(
-(i*73)%W,
-(i*131)%H,
+x,
+y,
 2,
 2
 );
 
 }
 
+ctx.globalAlpha=1;
+
+
+for(
+let y=250;
+y<H;
+y+=100
+){
+
+drawLamp(
+25,
+y
+);
+
+drawLamp(
+495,
+y+50
+);
+
+}
+
 }
 
 }
 
 
-function roundRect(x,y,w,h,r){
+/* =====================================================
+                         TREE
+===================================================== */
+
+function drawTree(x,y){
+
+ctx.fillStyle="#543b28";
+
+ctx.fillRect(
+x-4,
+y-25,
+8,
+25
+);
+
+
+let g=
+ctx.createRadialGradient(
+x-5,
+y-45,
+3,
+x,
+y-40,
+25
+);
+
+g.addColorStop(
+0,
+"#6fc45b"
+);
+
+g.addColorStop(
+1,
+"#174f28"
+);
+
+ctx.fillStyle=g;
 
 ctx.beginPath();
 
-ctx.moveTo(x+r,y);
+ctx.arc(
+x,
+y-45,
+22,
+0,
+Math.PI*2
+);
 
-ctx.lineTo(x+w-r,y);
+ctx.fill();
 
-ctx.quadraticCurveTo(
-x+w,y,
-x+w,y+r
+}
+
+
+/* =====================================================
+                         ROCK
+===================================================== */
+
+function drawRock(x,y){
+
+ctx.fillStyle="#7e6447";
+
+ctx.beginPath();
+
+ctx.moveTo(
+x-18,
+y
 );
 
 ctx.lineTo(
-x+w,
-y+h-r
+x-10,
+y-18
 );
 
-ctx.quadraticCurveTo(
-x+w,y+h,
-x+w-r,y+h
+ctx.lineTo(
+x+8,
+y-25
 );
 
-ctx.lineTo(x+r,y+h);
-
-ctx.quadraticCurveTo(
-x,y+h,
-x,y+h-r
+ctx.lineTo(
+x+20,
+y-5
 );
 
-ctx.lineTo(x,y+r);
+ctx.lineTo(
+x+15,
+y+8
+);
 
-ctx.quadraticCurveTo(
-x,y,
-x+r,y
+ctx.lineTo(
+x-15,
+y+8
 );
 
 ctx.closePath();
@@ -1037,51 +1990,441 @@ ctx.fill();
 }
 
 
-function drawCar(x,y,color){
+/* =====================================================
+                         LAMP
+===================================================== */
+
+function drawLamp(x,y){
+
+ctx.fillStyle="#222";
+
+ctx.fillRect(
+x-2,
+y-60,
+4,
+60
+);
+
+
+ctx.fillStyle="#ffeaa0";
+
+ctx.shadowColor="#ffeaa0";
+
+ctx.shadowBlur=18;
+
+ctx.beginPath();
+
+ctx.arc(
+x,
+y-63,
+7,
+0,
+Math.PI*2
+);
+
+ctx.fill();
+
+ctx.shadowBlur=0;
+
+}
+
+
+/* =====================================================
+                         ROUND RECT
+===================================================== */
+
+function roundRect(
+x,
+y,
+w,
+h,
+r
+){
+
+r=
+Math.min(
+r,
+w/2,
+h/2
+);
+
+ctx.beginPath();
+
+ctx.moveTo(
+x+r,
+y
+);
+
+ctx.lineTo(
+x+w-r,
+y
+);
+
+ctx.quadraticCurveTo(
+x+w,
+y,
+x+w,
+y+r
+);
+
+ctx.lineTo(
+x+w,
+y+h-r
+);
+
+ctx.quadraticCurveTo(
+x+w,
+y+h,
+x+w-r,
+y+h
+);
+
+ctx.lineTo(
+x+r,
+y+h
+);
+
+ctx.quadraticCurveTo(
+x,
+y+h,
+x,
+y+h-r
+);
+
+ctx.lineTo(
+x,
+y+r
+);
+
+ctx.quadraticCurveTo(
+x,
+y,
+x+r,
+y
+);
+
+ctx.closePath();
+
+ctx.fill();
+
+}
+
+
+/* =====================================================
+                         REALISTIC CAR
+===================================================== */
+
+function drawCar(
+x,
+y,
+color
+){
 
 ctx.save();
 
-ctx.translate(x,y);
+ctx.translate(
+x,
+y
+);
 
 
-ctx.fillStyle="#111";
+/* SHADOW */
 
-roundRect(2,12,10,25,4);
+ctx.fillStyle=
+"rgba(0,0,0,.5)";
 
-roundRect(38,12,10,25,4);
+ctx.beginPath();
 
-roundRect(2,55,10,25,4);
+ctx.ellipse(
+25,
+84,
+29,
+9,
+0,
+0,
+Math.PI*2
+);
 
-roundRect(38,55,10,25,4);
+ctx.fill();
 
+
+/* WHEELS */
+
+ctx.fillStyle="#080a0c";
+
+roundRect(
+0,
+10,
+13,
+27,
+5
+);
+
+roundRect(
+37,
+10,
+13,
+27,
+5
+);
+
+roundRect(
+0,
+54,
+13,
+27,
+5
+);
+
+roundRect(
+37,
+54,
+13,
+27,
+5
+);
+
+
+/* RIMS */
+
+ctx.fillStyle="#bfc8cf";
+
+ctx.beginPath();
+
+ctx.arc(
+6,
+24,
+4,
+0,
+Math.PI*2
+);
+
+ctx.fill();
+
+ctx.beginPath();
+
+ctx.arc(
+44,
+24,
+4,
+0,
+Math.PI*2
+);
+
+ctx.fill();
+
+ctx.beginPath();
+
+ctx.arc(
+6,
+67,
+4,
+0,
+Math.PI*2
+);
+
+ctx.fill();
+
+ctx.beginPath();
+
+ctx.arc(
+44,
+67,
+4,
+0,
+Math.PI*2
+);
+
+ctx.fill();
+
+
+/* BODY GRADIENT */
+
+let body=
+ctx.createLinearGradient(
+0,
+0,
+50,
+0
+);
+
+body.addColorStop(
+0,
+"#111"
+);
+
+body.addColorStop(
+.12,
+color
+);
+
+body.addColorStop(
+.5,
+"#ffffff"
+);
+
+body.addColorStop(
+.7,
+color
+);
+
+body.addColorStop(
+1,
+"#111"
+);
+
+ctx.fillStyle=body;
+
+roundRect(
+5,
+0,
+40,
+82,
+11
+);
+
+
+/* HOOD */
 
 ctx.fillStyle=color;
 
-roundRect(5,0,40,82,10);
+roundRect(
+9,
+3,
+32,
+23,
+8
+);
 
 
-ctx.fillStyle="#bfeeff";
+/* WINDSHIELD */
 
-roundRect(11,10,28,26,6);
+let glass=
+ctx.createLinearGradient(
+0,
+10,
+0,
+35
+);
+
+glass.addColorStop(
+0,
+"#e7fbff"
+);
+
+glass.addColorStop(
+.4,
+"#5e8fa8"
+);
+
+glass.addColorStop(
+1,
+"#17232d"
+);
+
+ctx.fillStyle=glass;
+
+roundRect(
+11,
+12,
+28,
+25,
+6
+);
 
 
-ctx.fillStyle="#17202b";
+/* GLASS REFLECTION */
 
-roundRect(14,15,22,16,4);
+ctx.fillStyle=
+"rgba(255,255,255,.5)";
 
+ctx.fillRect(
+14,
+14,
+4,
+18
+);
+
+
+/* HEADLIGHTS */
 
 ctx.fillStyle="#fff";
 
-ctx.fillRect(10,4,8,3);
+ctx.shadowColor="#fff";
 
-ctx.fillRect(32,4,8,3);
+ctx.shadowBlur=10;
+
+roundRect(
+9,
+4,
+9,
+6,
+3
+);
+
+roundRect(
+32,
+4,
+9,
+6,
+3
+);
+
+ctx.shadowBlur=0;
 
 
-ctx.fillStyle="#ff304c";
+/* TAIL LIGHTS */
 
-ctx.fillRect(10,70,8,5);
+ctx.fillStyle="#ff203c";
 
-ctx.fillRect(32,70,8,5);
+ctx.shadowColor="#ff203c";
+
+ctx.shadowBlur=8;
+
+roundRect(
+9,
+70,
+9,
+6,
+3
+);
+
+roundRect(
+32,
+70,
+9,
+6,
+3
+);
+
+ctx.shadowBlur=0;
+
+
+/* SIDE LINE */
+
+ctx.fillStyle=
+"rgba(255,255,255,.35)";
+
+ctx.fillRect(
+9,
+42,
+32,
+2
+);
+
+
+/* BODY SHINE */
+
+ctx.fillStyle=
+"rgba(255,255,255,.3)";
+
+roundRect(
+9,
+47,
+5,
+18,
+2
+);
 
 
 ctx.restore();
@@ -1089,28 +2432,63 @@ ctx.restore();
 }
 
 
-function draw(){
+/* =====================================================
+                         COIN
+===================================================== */
 
-drawRoad();
+function drawCoin(c){
 
+ctx.save();
 
-/* العملات */
+ctx.translate(
+c.x,
+c.y
+);
 
-game.coinsObjects.forEach(c=>{
+ctx.shadowColor="#ffd83d";
 
-ctx.fillStyle="#ffd83d";
+ctx.shadowBlur=15;
+
+let g=
+ctx.createRadialGradient(
+-3,
+-3,
+2,
+0,
+0,
+13
+);
+
+g.addColorStop(
+0,
+"#fff5a0"
+);
+
+g.addColorStop(
+.4,
+"#ffd83d"
+);
+
+g.addColorStop(
+1,
+"#d39100"
+);
+
+ctx.fillStyle=g;
 
 ctx.beginPath();
 
 ctx.arc(
-c.x,
-c.y,
+0,
+0,
 11,
 0,
 Math.PI*2
 );
 
 ctx.fill();
+
+ctx.shadowBlur=0;
 
 ctx.fillStyle="#8a5d00";
 
@@ -1120,27 +2498,70 @@ ctx.textAlign="center";
 
 ctx.fillText(
 "$",
-c.x,
-c.y+5
+0,
+5
 );
 
-});
+ctx.restore();
+
+}
 
 
-/* السيارات المنافسة */
+/* =====================================================
+                         DRAW
+===================================================== */
 
-game.enemies.forEach(enemy=>{
+function draw(){
+
+ctx.save();
+
+
+/* SHAKE */
+
+if(game.shake>0){
+
+ctx.translate(
+(Math.random()-.5)*game.shake,
+(Math.random()-.5)*game.shake
+);
+
+game.shake=
+Math.max(
+0,
+game.shake-.7
+);
+
+}
+
+
+/* ROAD */
+
+drawRoad();
+
+
+/* COINS */
+
+game.coinsObjects.forEach(
+drawCoin
+);
+
+
+/* ENEMY CARS */
+
+game.enemies.forEach(
+enemy=>{
 
 drawCar(
 enemy.x,
 enemy.y,
-"#ef4057"
+"#e84259"
 );
 
-});
+}
+);
 
 
-/* سيارة اللاعب */
+/* PLAYER */
 
 drawCar(
 player.x,
@@ -1149,35 +2570,75 @@ cars[data.car].color
 );
 
 
-/* النيترو */
+/* NITRO FIRE */
 
-if(keys.nitro && game.nitro>0){
+if(
+keys.nitro &&
+game.nitro>0
+){
 
-ctx.fillStyle="#00e5ff";
+let flame=
+ctx.createLinearGradient(
+0,
+player.y+80,
+0,
+player.y+125
+);
+
+flame.addColorStop(
+0,
+"#ffffff"
+);
+
+flame.addColorStop(
+.25,
+"#00e5ff"
+);
+
+flame.addColorStop(
+.7,
+"#157cff"
+);
+
+flame.addColorStop(
+1,
+"rgba(0,0,255,0)"
+);
+
+ctx.fillStyle=flame;
 
 ctx.beginPath();
 
 ctx.moveTo(
-player.x+15,
-player.y+82
+player.x+14,
+player.y+78
 );
 
 ctx.lineTo(
 player.x+25,
-player.y+120
+player.y+125
 );
 
 ctx.lineTo(
-player.x+35,
-player.y+82
+player.x+36,
+player.y+78
 );
+
+ctx.closePath();
 
 ctx.fill();
 
 }
 
+
+ctx.restore();
+
 }
 
+
+/* =====================================================
+                         GAME OVER
+===================================================== */
 
 function endGame(){
 
@@ -1186,41 +2647,69 @@ game.running=false;
 cancelAnimationFrame(animation);
 
 
-if(game.score>data.best){
+if(
+game.score>
+data.best
+){
 
-data.best=Math.floor(game.score);
+data.best=
+Math.floor(game.score);
 
 }
 
 
-data.coins+=game.coins;
+data.coins+=
+game.coins;
 
 save();
 
 
-document.getElementById("modalBox").innerHTML=`
+showModal(`
 
-<h2>🏁 انتهى السباق!</h2>
+<h2>
+🏁 انتهى السباق!
+</h2>
 
 <h1 style="color:#00e5ff">
+
 ${Math.floor(game.score)}
+
 </h1>
 
 <p>
-💰 حصلت على ${game.coins} عملة
+💰 العملات:
+<b>${game.coins}</b>
 </p>
 
-<button class="start"
+<button
+class="btn start"
 onclick="closeModal();startGame()">
+
 🔄 إعادة السباق
+
 </button>
 
-<button class="exit"
+<button
+class="btn pink"
 onclick="closeModal();quitGame()">
+
 🏠 القائمة
+
 </button>
 
-`;
+`);
+
+}
+
+
+/* =====================================================
+                         MODAL
+===================================================== */
+
+function showModal(html){
+
+document.getElementById("modalBox")
+.innerHTML=html;
 
 document.getElementById("modal")
 .classList.remove("hidden");
@@ -1236,16 +2725,30 @@ document.getElementById("modal")
 }
 
 
+/* =====================================================
+                         GAME LOOP
+===================================================== */
+
 function loop(time){
 
-if(!game.running)return;
+if(!game.running)
+return;
 
-if(game.paused)return;
+
+if(game.paused)
+return;
 
 
-let dt=(time-lastTime)/1000;
+let dt=
+(time-lastTime)/1000;
 
-dt=Math.min(dt,0.035);
+
+dt=
+Math.min(
+dt,
+0.035
+);
+
 
 lastTime=time;
 
@@ -1255,105 +2758,172 @@ update(dt);
 draw();
 
 
-animation=requestAnimationFrame(loop);
+animation=
+requestAnimationFrame(loop);
 
 }
 
 
-/* أزرار الهاتف */
+/* =====================================================
+                         MOBILE CONTROLS
+===================================================== */
 
-function buttonControl(id,key){
+function buttonControl(
+id,
+key
+){
 
-let button=document.getElementById(id);
+const button=
+document.getElementById(id);
 
-button.addEventListener("pointerdown",e=>{
+
+button.addEventListener(
+"pointerdown",
+e=>{
 
 e.preventDefault();
 
 keys[key]=true;
 
-});
+}
+);
 
-button.addEventListener("pointerup",()=>{
 
-keys[key]=false;
-
-});
-
-button.addEventListener("pointercancel",()=>{
+button.addEventListener(
+"pointerup",
+()=>{
 
 keys[key]=false;
 
-});
+}
+);
 
-button.addEventListener("pointerleave",()=>{
+
+button.addEventListener(
+"pointercancel",
+()=>{
 
 keys[key]=false;
 
-});
+}
+);
+
+
+button.addEventListener(
+"pointerleave",
+()=>{
+
+keys[key]=false;
+
+}
+);
 
 }
 
 
-buttonControl("left","left");
+buttonControl(
+"left",
+"left"
+);
 
-buttonControl("right","right");
+buttonControl(
+"right",
+"right"
+);
 
-buttonControl("nitroButton","nitro");
+buttonControl(
+"nitroButton",
+"nitro"
+);
 
 
-/* لوحة المفاتيح */
+/* =====================================================
+                         KEYBOARD
+===================================================== */
 
-document.addEventListener("keydown",e=>{
+document.addEventListener(
+"keydown",
+e=>{
 
 if(
-e.key==="ArrowLeft"||
+e.key==="ArrowLeft" ||
 e.key.toLowerCase()==="a"
-)
+){
+
 keys.left=true;
 
+}
+
 
 if(
-e.key==="ArrowRight"||
+e.key==="ArrowRight" ||
 e.key.toLowerCase()==="d"
-)
+){
+
 keys.right=true;
 
+}
 
-if(e.code==="Space")
+
+if(e.code==="Space"){
+
+e.preventDefault();
+
 keys.nitro=true;
+
+}
 
 
 if(
 e.key.toLowerCase()==="p" &&
 !e.repeat
-)
+){
+
 pauseGame();
 
-});
+}
+
+}
+);
 
 
-document.addEventListener("keyup",e=>{
+document.addEventListener(
+"keyup",
+e=>{
 
 if(
-e.key==="ArrowLeft"||
+e.key==="ArrowLeft" ||
 e.key.toLowerCase()==="a"
-)
+){
+
 keys.left=false;
 
+}
+
 
 if(
-e.key==="ArrowRight"||
+e.key==="ArrowRight" ||
 e.key.toLowerCase()==="d"
-)
+){
+
 keys.right=false;
 
+}
 
-if(e.code==="Space")
+
+if(e.code==="Space"){
+
 keys.nitro=false;
 
-});
+}
 
+}
+);
+
+
+/* =====================================================
+                         START
+===================================================== */
 
 renderMenu();
 
