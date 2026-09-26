@@ -3,295 +3,278 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Speed Race</title>
+<title>Speed Race X</title>
 
 <style>
 *{box-sizing:border-box}
 
 body{
-margin:0;
-font-family:Arial,Tahoma,sans-serif;
-background:linear-gradient(135deg,#050812,#101b35);
-color:white;
-text-align:center
+    margin:0;
+    background:linear-gradient(135deg,#06101d,#162746);
+    color:white;
+    font-family:Arial,Tahoma,sans-serif;
+    text-align:center;
 }
 
-.screen{
-min-height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
-padding:25px
+.menu{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
 }
 
 .panel{
-width:100%;
-max-width:850px;
-background:#10182a;
-border:1px solid #293653;
-border-radius:25px;
-padding:35px;
-box-shadow:0 20px 60px #0008
+    width:min(900px,95vw);
+    background:#101a2d;
+    padding:30px;
+    border-radius:25px;
+    box-shadow:0 20px 70px #000;
+}
+
+.logo{
+    font-size:70px;
 }
 
 h1{
-font-size:60px;
-margin:5px 0 10px
+    font-size:55px;
+    margin:5px;
 }
 
-h1 span{color:#00d9ff}
-
-.subtitle{
-color:#aeb9cf;
-font-size:18px;
-margin-bottom:30px
+h1 span{
+    color:#00e5ff;
 }
 
-button{
-border:0;
-border-radius:12px;
-padding:15px 25px;
-font-size:18px;
-font-weight:bold;
-cursor:pointer;
-margin:7px
+button,a{
+    border:0;
+    border-radius:12px;
+    padding:14px 22px;
+    margin:7px;
+    font-size:17px;
+    font-weight:bold;
+    cursor:pointer;
+    text-decoration:none;
 }
 
-.primary{
-background:#00d9ff;
-color:#061019
-}
-
-.pink{
-background:#ff3d71;
-color:white
-}
-
-.green{
-background:#20d47b;
-color:#061019
+.start{
+    background:#00e5ff;
+    color:#00131a;
 }
 
 .download{
-display:inline-block;
-background:#ff3d71;
-color:white;
-text-decoration:none;
-border-radius:12px;
-padding:15px 25px;
-font-size:18px;
-font-weight:bold;
-margin:7px
+    background:#21e787;
+    color:#00150c;
+}
+
+.exit{
+    background:#ff3d71;
+    color:white;
 }
 
 .cards{
-display:flex;
-justify-content:center;
-gap:15px;
-flex-wrap:wrap;
-margin:25px 0
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:12px;
 }
 
 .card{
-background:#18233a;
-border:2px solid transparent;
-border-radius:15px;
-padding:20px;
-width:170px;
-cursor:pointer
+    width:150px;
+    padding:15px;
+    background:#192840;
+    border:2px solid #30445f;
+    border-radius:16px;
+    cursor:pointer;
 }
 
 .card.selected{
-border-color:#00d9ff
+    border-color:#00e5ff;
+    box-shadow:0 0 20px #00e5ff55;
 }
 
-.carIcon{
-font-size:55px
+.car{
+    font-size:50px;
 }
 
 .stats{
-display:flex;
-justify-content:center;
-gap:20px;
-flex-wrap:wrap;
-margin:20px
+    margin:20px;
 }
 
 .stat{
-background:#18233a;
-padding:12px 20px;
-border-radius:12px
+    display:inline-block;
+    background:#18263d;
+    padding:12px 20px;
+    border-radius:12px;
+    margin:5px;
 }
 
-#gameScreen{
-display:none;
-padding:10px
+#game{
+    padding:10px;
 }
 
-.gameTop{
-width:100%;
-max-width:520px;
-margin:auto;
-display:flex;
-justify-content:space-between;
-align-items:center;
-gap:8px;
-flex-wrap:wrap
+.hidden{
+    display:none!important;
 }
 
-.gameTop div{
-background:#111a2d;
-padding:9px 13px;
-border-radius:10px
+.top{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
 }
 
-canvas{
-display:block;
-width:min(500px,95vw);
-height:auto;
-max-height:78vh;
-margin:10px auto;
-background:#25733c;
-border:3px solid #00d9ff;
-border-radius:12px
+.badge{
+    background:#101c31;
+    border:1px solid #304461;
+    padding:9px 13px;
+    border-radius:10px;
+}
+
+.badge b{
+    color:#00e5ff;
+}
+
+#canvas{
+    display:block;
+    width:min(520px,96vw);
+    height:auto;
+    margin:10px auto;
+    border:3px solid #00e5ff;
+    border-radius:15px;
+    background:#333;
+    touch-action:none;
 }
 
 .controls{
-display:flex;
-justify-content:center;
-gap:20px
+    display:flex;
+    justify-content:center;
+    gap:15px;
+    direction:ltr;
 }
 
 .control{
-width:90px;
-height:55px;
-font-size:25px
+    width:90px;
+    height:55px;
+    background:#17263d;
+    color:white;
 }
 
-#message{
-font-size:22px;
-margin:10px
+.nitro{
+    background:#21e787;
+    color:#00150c;
 }
 
-@media(max-width:600px){
-h1{font-size:42px}
-.panel{padding:20px}
-.card{width:135px}
+.status{
+    color:#aabbd2;
+}
+
+.modal{
+    position:fixed;
+    inset:0;
+    background:#000b;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.modalBox{
+    background:#101a2d;
+    padding:30px;
+    border-radius:20px;
+    width:min(450px,90vw);
 }
 </style>
 </head>
 
 <body>
 
-<div id="menu" class="screen">
+<!-- القائمة -->
+<div id="menu" class="menu">
 
 <div class="panel">
 
-<div style="font-size:80px">🏎️</div>
+<div class="logo">🏎️</div>
 
-<h1>Speed <span>Race</span></h1>
+<h1>Speed <span>Race X</span></h1>
 
-<p class="subtitle">
-أسرع لعبة سباق! اختر سيارتك، اجمع العملات، واستخدم النيترو لتصبح أسرع متسابق.
-</p>
+<p>لعبة سباق سيارات مطورة 🚀</p>
 
 <div class="stats">
 
 <div class="stat">
-💰 العملات:
-<b id="coins">0</b>
+💰 <b id="coins">0</b>
 </div>
 
 <div class="stat">
-🏆 أفضل نتيجة:
-<b id="best">0</b>
+🏆 <b id="best">0</b>
 </div>
 
 </div>
 
-<h2>🚗 اختر سيارتك</h2>
+<h2>🚘 اختر السيارة</h2>
 
-<div class="cards">
-
-<div class="card selected" data-car="0">
-<div class="carIcon">🏎️</div>
-<b>البرق</b>
-<p>سرعة ⭐⭐⭐</p>
-</div>
-
-<div class="card" data-car="1">
-<div class="carIcon">🚗</div>
-<b>الأسطورة</b>
-<p>سرعة ⭐⭐⭐⭐</p>
-</div>
-
-<div class="card" data-car="2">
-<div class="carIcon">🚙</div>
-<b>الصاروخ</b>
-<p>سرعة ⭐⭐⭐⭐⭐</p>
-</div>
-
-</div>
+<div id="cars" class="cards"></div>
 
 <h2>🏁 اختر المرحلة</h2>
 
-<div class="cards">
-
-<div class="card selected" data-level="1">
-<div class="carIcon">🌆</div>
-<b>المدينة</b>
-<p>سهلة</p>
-</div>
-
-<div class="card" data-level="2">
-<div class="carIcon">🌵</div>
-<b>الصحراء</b>
-<p>متوسطة</p>
-</div>
-
-<div class="card" data-level="3">
-<div class="carIcon">❄️</div>
-<b>الجليد</b>
-<p>صعبة</p>
-</div>
-
-</div>
-
-<button class="primary" onclick="startGame()">
-🎮 ابدأ السباق
-</button>
+<div id="levels" class="cards"></div>
 
 <br>
+
+<button class="start" onclick="startGame()">
+🎮 ابدأ السباق
+</button>
 
 <a class="download" href="SpeedRace.zip" download>
 ⬇️ تحميل اللعبة
 </a>
 
+<p>
+⬅️ ➡️ للحركة — Space للنيترو — P للإيقاف
+</p>
+
 </div>
 </div>
 
 
-<div id="gameScreen">
+<!-- اللعبة -->
 
-<div class="gameTop">
+<div id="game" class="hidden">
 
-<div>🏆 <span id="score">0</span></div>
+<div class="top">
 
-<div>💰 <span id="gameCoins">0</span></div>
+<div class="badge">
+🏆 <b id="score">0</b>
+</div>
 
-<div>❤️ <span id="lives">3</span></div>
+<div class="badge">
+💰 <b id="runCoins">0</b>
+</div>
 
-<div>⚡ <span id="nitro">100</span>%</div>
+<div class="badge">
+❤️ <b id="health">3</b>
+</div>
 
-<button class="pink" onclick="backMenu()">
+<div class="badge">
+⚡ <b id="nitroValue">100</b>%
+</div>
+
+<button onclick="pauseGame()">
+⏸️
+</button>
+
+<button class="exit" onclick="quitGame()">
 خروج
 </button>
 
 </div>
 
-<div id="message"></div>
+<div class="status" id="status">
+جاهز للسباق 🏎️
+</div>
 
-<canvas id="canvas" width="500" height="700"></canvas>
+<canvas id="canvas" width="520" height="760"></canvas>
 
 <div class="controls">
 
@@ -299,7 +282,7 @@ h1{font-size:42px}
 ⬅️
 </button>
 
-<button class="control green" id="nitroButton">
+<button class="control nitro" id="nitroButton">
 ⚡
 </button>
 
@@ -309,9 +292,14 @@ h1{font-size:42px}
 
 </div>
 
-<p>
-استخدم ← → للتحرك و ⚡ للنيترو
-</p>
+</div>
+
+
+<!-- نافذة النهاية -->
+
+<div id="modal" class="modal hidden">
+
+<div class="modalBox" id="modalBox"></div>
 
 </div>
 
@@ -321,20 +309,119 @@ h1{font-size:42px}
 const canvas=document.getElementById("canvas");
 const ctx=canvas.getContext("2d");
 
-let selectedCar=0;
-let selectedLevel=1;
+const W=520;
+const H=760;
 
-let coins=Number(localStorage.getItem("raceCoins")||0);
-let best=Number(localStorage.getItem("raceBest")||0);
+const roadX=55;
+const roadWidth=410;
 
-document.getElementById("coins").textContent=coins;
-document.getElementById("best").textContent=best;
+const lanes=[100,205,310,415];
 
-let running=false;
-let score=0;
-let gameCoins=0;
-let lives=3;
-let nitro=100;
+const cars=[
+
+{
+name:"البرق",
+color:"#00bfff",
+speed:5.5,
+price:0
+},
+
+{
+name:"الصقر",
+color:"#ff3d71",
+speed:6.5,
+price:250
+},
+
+{
+name:"الصاروخ",
+color:"#21e787",
+speed:7.5,
+price:600
+},
+
+{
+name:"الظل",
+color:"#a56cff",
+speed:8.5,
+price:1200
+}
+
+];
+
+const levels=[
+
+{
+name:"المدينة",
+emoji:"🌆",
+background:"#27753f",
+road:"#363a3e",
+speed:1
+},
+
+{
+name:"الصحراء",
+emoji:"🌵",
+background:"#bd914d",
+road:"#3b3937",
+speed:1.25
+},
+
+{
+name:"الجليد",
+emoji:"❄️",
+background:"#a9d8e7",
+road:"#444c55",
+speed:1.5
+},
+
+{
+name:"الليل",
+emoji:"🌃",
+background:"#07162e",
+road:"#252b35",
+speed:1.8
+}
+
+];
+
+
+let data=JSON.parse(
+localStorage.getItem("speedRaceX")
+);
+
+if(!data){
+
+data={
+coins:0,
+best:0,
+car:0,
+level:0,
+owned:[true,false,false,false]
+};
+
+}
+
+let player={
+x:235,
+y:640,
+width:50,
+height:82
+};
+
+let game={
+running:false,
+paused:false,
+score:0,
+coins:0,
+health:3,
+nitro:100,
+enemies:[],
+coinsObjects:[],
+roadMove:0,
+spawn:0,
+coinSpawn:0
+};
 
 let keys={
 left:false,
@@ -342,89 +429,162 @@ right:false,
 nitro:false
 };
 
-let player;
-let enemies=[];
-let coinObjects=[];
+let animation=0;
+let lastTime=0;
 
-let spawnTimer=0;
-let coinTimer=0;
-let roadOffset=0;
-let animation;
 
-const cars=[
-{
-color:"#00aaff",
-speed:5
-},
-{
-color:"#ff3d71",
-speed:6
-},
-{
-color:"#20d47b",
-speed:7
+function save(){
+
+localStorage.setItem(
+"speedRaceX",
+JSON.stringify(data)
+);
+
 }
-];
 
 
-document.querySelectorAll("[data-car]").forEach(card=>{
+function renderMenu(){
 
-card.addEventListener("click",()=>{
+document.getElementById("coins").textContent=data.coins;
 
-document.querySelectorAll("[data-car]")
-.forEach(x=>x.classList.remove("selected"));
-
-card.classList.add("selected");
-
-selectedCar=Number(card.dataset.car);
-
-});
-
-});
+document.getElementById("best").textContent=data.best;
 
 
-document.querySelectorAll("[data-level]").forEach(card=>{
+document.getElementById("cars").innerHTML=
+cars.map((car,i)=>`
 
-card.addEventListener("click",()=>{
+<div class="card ${data.car===i?"selected":""}"
+onclick="chooseCar(${i})">
 
-document.querySelectorAll("[data-level]")
-.forEach(x=>x.classList.remove("selected"));
+<div class="car">🏎️</div>
 
-card.classList.add("selected");
+<b>${car.name}</b>
 
-selectedLevel=Number(card.dataset.level);
+<p>⚡ ${car.speed}</p>
 
-});
+<p>
+${data.owned[i]
+?"✓ مملوكة"
+:"🔒 "+car.price+" 💰"}
+</p>
 
-});
+</div>
+
+`).join("");
+
+
+document.getElementById("levels").innerHTML=
+levels.map((level,i)=>`
+
+<div class="card ${data.level===i?"selected":""}"
+onclick="chooseLevel(${i})">
+
+<div class="car">${level.emoji}</div>
+
+<b>${level.name}</b>
+
+</div>
+
+`).join("");
+
+}
+
+
+function chooseCar(i){
+
+if(data.owned[i]){
+
+data.car=i;
+
+save();
+
+renderMenu();
+
+return;
+
+}
+
+
+if(data.coins<cars[i].price){
+
+alert(
+"تحتاج "+cars[i].price+" عملة لشراء هذه السيارة."
+);
+
+return;
+
+}
+
+data.coins-=cars[i].price;
+
+data.owned[i]=true;
+
+data.car=i;
+
+save();
+
+renderMenu();
+
+}
+
+
+function chooseLevel(i){
+
+data.level=i;
+
+save();
+
+renderMenu();
+
+}
 
 
 function startGame(){
 
-document.getElementById("menu").style.display="none";
+document.getElementById("menu")
+.classList.add("hidden");
 
-document.getElementById("gameScreen").style.display="block";
+document.getElementById("game")
+.classList.remove("hidden");
 
-score=0;
-gameCoins=0;
-lives=3;
-nitro=100;
 
-enemies=[];
-coinObjects=[];
+game={
 
-player={
-x:225,
-y:570,
-width:50,
-height:80
+running:true,
+
+paused:false,
+
+score:0,
+
+coins:0,
+
+health:3,
+
+nitro:100,
+
+enemies:[],
+
+coinsObjects:[],
+
+roadMove:0,
+
+spawn:0,
+
+coinSpawn:0
+
 };
 
-document.getElementById("message").textContent="";
 
-updateHUD();
+player.x=235;
 
-running=true;
+player.y=640;
+
+
+document.getElementById("status")
+.textContent="السباق بدأ! 🏎️💨";
+
+
+lastTime=performance.now();
 
 cancelAnimationFrame(animation);
 
@@ -433,50 +593,67 @@ animation=requestAnimationFrame(loop);
 }
 
 
-function backMenu(){
+function quitGame(){
 
-running=false;
+game.running=false;
 
 cancelAnimationFrame(animation);
 
-document.getElementById("gameScreen").style.display="none";
+document.getElementById("game")
+.classList.add("hidden");
 
-document.getElementById("menu").style.display="flex";
+document.getElementById("menu")
+.classList.remove("hidden");
+
+renderMenu();
 
 }
 
 
-function updateHUD(){
+function pauseGame(){
 
-document.getElementById("score").textContent=score;
+if(!game.running)return;
 
-document.getElementById("gameCoins").textContent=gameCoins;
+game.paused=!game.paused;
 
-document.getElementById("lives").textContent=lives;
+if(game.paused){
 
-document.getElementById("nitro").textContent=Math.floor(nitro);
+document.getElementById("status")
+.textContent="⏸️ اللعبة متوقفة";
+
+}else{
+
+document.getElementById("status")
+.textContent="🏎️ السباق مستمر";
+
+lastTime=performance.now();
+
+animation=requestAnimationFrame(loop);
+
+}
 
 }
 
 
 function spawnEnemy(){
 
-const lanes=[
-65,
-165,
-265,
-365
-];
-
-const lane=
+let lane=
 lanes[Math.floor(Math.random()*lanes.length)];
 
-enemies.push({
-x:lane,
+game.enemies.push({
+
+x:lane-25,
+
 y:-100,
+
 width:50,
-height:80,
-speed:3+selectedLevel+score/500
+
+height:82,
+
+speed:
+(3+Math.random()*2)*
+levels[data.level].speed
+
 });
 
 }
@@ -484,20 +661,15 @@ speed:3+selectedLevel+score/500
 
 function spawnCoin(){
 
-const lanes=[
-75,
-175,
-275,
-375
-];
-
-const lane=
+let lane=
 lanes[Math.floor(Math.random()*lanes.length)];
 
-coinObjects.push({
+game.coinsObjects.push({
+
 x:lane,
-y:-30,
-r:13
+
+y:-30
+
 });
 
 }
@@ -505,112 +677,122 @@ r:13
 
 function collision(a,b){
 
-return(
-a.x<b.x+b.width &&
-a.x+a.width>b.x &&
-a.y<b.y+b.height &&
-a.y+a.height>b.y
+return (
+
+a.x < b.x+b.width &&
+a.x+a.width > b.x &&
+a.y < b.y+b.height &&
+a.y+a.height > b.y
+
 );
 
 }
 
 
-function update(){
+function update(dt){
 
-let speed=cars[selectedCar].speed;
+let car=cars[data.car];
 
-if(keys.nitro && nitro>0){
+let speed=car.speed;
+
+if(keys.nitro && game.nitro>0){
 
 speed+=6;
 
-nitro-=0.8;
+game.nitro-=35*dt;
 
 }else{
 
-nitro=Math.min(100,nitro+0.05);
+game.nitro+=8*dt;
 
 }
+
+game.nitro=
+Math.max(0,Math.min(100,game.nitro));
 
 
 if(keys.left)
-player.x-=speed;
+player.x-=speed*60*dt;
 
 if(keys.right)
-player.x+=speed;
+player.x+=speed*60*dt;
 
 
 player.x=Math.max(
-45,
-Math.min(405,player.x)
+roadX+10,
+Math.min(
+roadX+roadWidth-player.width-10,
+player.x
+)
 );
 
 
-spawnTimer++;
+game.roadMove+=speed*60*dt;
 
-if(
-spawnTimer>
-55-Math.min(score/100,20)
-){
+game.spawn+=dt;
+
+game.coinSpawn+=dt;
+
+
+if(game.spawn>0.8){
 
 spawnEnemy();
 
-spawnTimer=0;
+game.spawn=0;
 
 }
 
 
-coinTimer++;
-
-if(coinTimer>75){
+if(game.coinSpawn>0.7){
 
 spawnCoin();
 
-coinTimer=0;
+game.coinSpawn=0;
 
 }
 
 
-enemies.forEach(enemy=>{
-enemy.y+=enemy.speed;
+game.enemies.forEach(enemy=>{
+
+enemy.y+=enemy.speed*60*dt;
+
 });
 
 
-coinObjects.forEach(coin=>{
-coin.y+=4+selectedLevel;
+game.coinsObjects.forEach(c=>{
+
+c.y+=300*dt;
+
 });
 
 
 for(
-let i=enemies.length-1;
+let i=game.enemies.length-1;
 i>=0;
 i--
 ){
 
-let enemy=enemies[i];
+let enemy=game.enemies[i];
 
 if(collision(player,enemy)){
 
-enemies.splice(i,1);
+game.enemies.splice(i,1);
 
-lives--;
+game.health--;
 
-updateHUD();
+if(game.health<=0){
 
-if(lives<=0){
-
-gameOver();
+endGame();
 
 return;
 
 }
 
-}
+}else if(enemy.y>H+100){
 
-if(enemy.y>720){
+game.enemies.splice(i,1);
 
-enemies.splice(i,1);
-
-score+=10;
+game.score+=20;
 
 }
 
@@ -618,182 +800,291 @@ score+=10;
 
 
 for(
-let i=coinObjects.length-1;
+let i=game.coinsObjects.length-1;
 i>=0;
 i--
 ){
 
-let coin=coinObjects[i];
+let c=game.coinsObjects[i];
 
-let box={
-x:coin.x,
-y:coin.y,
-width:26,
-height:26
+let coinBox={
+
+x:c.x-12,
+y:c.y-12,
+width:24,
+height:24
+
 };
 
-if(collision(player,box)){
 
-coinObjects.splice(i,1);
+if(collision(player,coinBox)){
 
-gameCoins++;
+game.coinsObjects.splice(i,1);
 
-score+=25;
+game.coins++;
 
-}
+game.score+=50;
 
-else if(coin.y>720){
+}else if(c.y>H){
 
-coinObjects.splice(i,1);
-
-}
+game.coinsObjects.splice(i,1);
 
 }
 
+}
 
-roadOffset+=5+selectedLevel;
+
+game.score+=dt*15;
 
 updateHUD();
+
+}
+
+
+function updateHUD(){
+
+document.getElementById("score")
+.textContent=Math.floor(game.score);
+
+document.getElementById("runCoins")
+.textContent=game.coins;
+
+document.getElementById("health")
+.textContent=game.health;
+
+document.getElementById("nitroValue")
+.textContent=Math.floor(game.nitro);
 
 }
 
 
 function drawRoad(){
 
-let background;
+let level=levels[data.level];
 
-if(selectedLevel===1)
-background="#20763b";
+ctx.fillStyle=level.background;
 
-if(selectedLevel===2)
-background="#b58b42";
-
-if(selectedLevel===3)
-background="#b9d7e8";
+ctx.fillRect(0,0,W,H);
 
 
-ctx.fillStyle=background;
+ctx.fillStyle=level.road;
 
 ctx.fillRect(
+roadX,
 0,
-0,
-500,
-700
+roadWidth,
+H
 );
 
 
-ctx.fillStyle="#343434";
+ctx.fillStyle="#ffffff";
 
 ctx.fillRect(
-40,
-0,
-420,
-700
-);
-
-
-ctx.fillStyle="#eeeeee";
-
-ctx.fillRect(
-35,
+roadX-7,
 0,
 5,
-700
+H
 );
 
 ctx.fillRect(
-460,
+roadX+roadWidth+2,
 0,
 5,
-700
+H
 );
 
 
-let offset=roadOffset%90;
+let offset=game.roadMove%120;
+
 
 for(
-let y=-90+offset;
-y<700;
-y+=90
+let y=-120+offset;
+y<H;
+y+=120
 ){
 
 ctx.fillRect(
-140,
+188,
 y,
-8,
-45
+7,
+55
 );
 
 ctx.fillRect(
-245,
+290,
 y,
-8,
-45
+7,
+55
 );
 
-ctx.fillRect(
-350,
-y,
-8,
-45
-);
+}
+
+
+if(data.level===0){
+
+ctx.fillStyle="#5aaa45";
+
+for(let y=40;y<H;y+=90){
+
+ctx.beginPath();
+
+ctx.arc(25,y,14,0,Math.PI*2);
+
+ctx.fill();
+
+ctx.beginPath();
+
+ctx.arc(495,y+40,14,0,Math.PI*2);
+
+ctx.fill();
 
 }
 
 }
 
 
-function drawCar(car,color){
+if(data.level===1){
 
-ctx.fillStyle=color;
+ctx.fillStyle="#d4a45f";
+
+for(let y=50;y<H;y+=100){
+
+ctx.fillRect(15,y,25,6);
+
+ctx.fillRect(480,y+35,25,6);
+
+}
+
+}
+
+
+if(data.level===2){
+
+ctx.fillStyle="white";
+
+for(let y=30;y<H;y+=100){
+
+ctx.fillRect(15,y,25,4);
+
+ctx.fillRect(480,y+40,25,4);
+
+}
+
+}
+
+
+if(data.level===3){
+
+ctx.fillStyle="#ffffff";
+
+for(let i=0;i<35;i++){
 
 ctx.fillRect(
-car.x,
-car.y,
-car.width,
-car.height
+(i*73)%W,
+(i*131)%H,
+2,
+2
 );
 
+}
 
-ctx.fillStyle="#c8f4ff";
+}
 
-ctx.fillRect(
-car.x+8,
-car.y+12,
-34,
-25
+}
+
+
+function roundRect(x,y,w,h,r){
+
+ctx.beginPath();
+
+ctx.moveTo(x+r,y);
+
+ctx.lineTo(x+w-r,y);
+
+ctx.quadraticCurveTo(
+x+w,y,
+x+w,y+r
 );
+
+ctx.lineTo(
+x+w,
+y+h-r
+);
+
+ctx.quadraticCurveTo(
+x+w,y+h,
+x+w-r,y+h
+);
+
+ctx.lineTo(x+r,y+h);
+
+ctx.quadraticCurveTo(
+x,y+h,
+x,y+h-r
+);
+
+ctx.lineTo(x,y+r);
+
+ctx.quadraticCurveTo(
+x,y,
+x+r,y
+);
+
+ctx.closePath();
+
+ctx.fill();
+
+}
+
+
+function drawCar(x,y,color){
+
+ctx.save();
+
+ctx.translate(x,y);
 
 
 ctx.fillStyle="#111";
 
-ctx.fillRect(
-car.x+4,
-car.y+8,
-7,
-20
-);
+roundRect(2,12,10,25,4);
 
-ctx.fillRect(
-car.x+39,
-car.y+8,
-7,
-20
-);
+roundRect(38,12,10,25,4);
 
-ctx.fillRect(
-car.x+4,
-car.y+55,
-7,
-20
-);
+roundRect(2,55,10,25,4);
 
-ctx.fillRect(
-car.x+39,
-car.y+55,
-7,
-20
-);
+roundRect(38,55,10,25,4);
+
+
+ctx.fillStyle=color;
+
+roundRect(5,0,40,82,10);
+
+
+ctx.fillStyle="#bfeeff";
+
+roundRect(11,10,28,26,6);
+
+
+ctx.fillStyle="#17202b";
+
+roundRect(14,15,22,16,4);
+
+
+ctx.fillStyle="#fff";
+
+ctx.fillRect(10,4,8,3);
+
+ctx.fillRect(32,4,8,3);
+
+
+ctx.fillStyle="#ff304c";
+
+ctx.fillRect(10,70,8,5);
+
+ctx.fillRect(32,70,8,5);
+
+
+ctx.restore();
 
 }
 
@@ -802,74 +1093,83 @@ function draw(){
 
 drawRoad();
 
-drawCar(
-player,
-cars[selectedCar].color
-);
 
+/* العملات */
 
-enemies.forEach(enemy=>{
+game.coinsObjects.forEach(c=>{
 
-drawCar(
-enemy,
-"#e52d45"
-);
-
-});
-
-
-coinObjects.forEach(coin=>{
-
-ctx.fillStyle="#ffd21c";
+ctx.fillStyle="#ffd83d";
 
 ctx.beginPath();
 
 ctx.arc(
-coin.x+13,
-coin.y+13,
-coin.r,
+c.x,
+c.y,
+11,
 0,
 Math.PI*2
 );
 
 ctx.fill();
 
+ctx.fillStyle="#8a5d00";
 
-ctx.fillStyle="#9b6500";
+ctx.font="bold 14px Arial";
 
-ctx.font="bold 15px Arial";
+ctx.textAlign="center";
 
 ctx.fillText(
 "$",
-coin.x+8,
-coin.y+19
+c.x,
+c.y+5
 );
 
 });
 
 
-if(
-keys.nitro &&
-nitro>0
-){
+/* السيارات المنافسة */
 
-ctx.fillStyle="#00d9ff";
+game.enemies.forEach(enemy=>{
+
+drawCar(
+enemy.x,
+enemy.y,
+"#ef4057"
+);
+
+});
+
+
+/* سيارة اللاعب */
+
+drawCar(
+player.x,
+player.y,
+cars[data.car].color
+);
+
+
+/* النيترو */
+
+if(keys.nitro && game.nitro>0){
+
+ctx.fillStyle="#00e5ff";
 
 ctx.beginPath();
 
 ctx.moveTo(
 player.x+15,
-player.y+80
+player.y+82
 );
 
 ctx.lineTo(
 player.x+25,
-player.y+105
+player.y+120
 );
 
 ctx.lineTo(
 player.x+35,
-player.y+80
+player.y+82
 );
 
 ctx.fill();
@@ -879,172 +1179,185 @@ ctx.fill();
 }
 
 
-function loop(){
+function endGame(){
 
-if(!running)
-return;
-
-update();
-
-draw();
-
-animation=
-requestAnimationFrame(loop);
-
-}
-
-
-function gameOver(){
-
-running=false;
+game.running=false;
 
 cancelAnimationFrame(animation);
 
 
-if(score>best){
+if(game.score>data.best){
 
-best=score;
-
-localStorage.setItem(
-"raceBest",
-best
-);
+data.best=Math.floor(game.score);
 
 }
 
 
-coins+=gameCoins;
+data.coins+=game.coins;
 
-localStorage.setItem(
-"raceCoins",
-coins
-);
+save();
 
 
-document.getElementById("message").innerHTML=`
+document.getElementById("modalBox").innerHTML=`
 
-<strong>🏁 انتهى السباق!</strong>
+<h2>🏁 انتهى السباق!</h2>
 
-<br>
+<h1 style="color:#00e5ff">
+${Math.floor(game.score)}
+</h1>
 
-النتيجة: ${score}
+<p>
+💰 حصلت على ${game.coins} عملة
+</p>
 
-<br>
-
-العملات التي جمعتها: ${gameCoins}
-
-<br><br>
-
-<button class="primary" onclick="startGame()">
+<button class="start"
+onclick="closeModal();startGame()">
 🔄 إعادة السباق
 </button>
 
-<button class="pink" onclick="backMenu()">
+<button class="exit"
+onclick="closeModal();quitGame()">
 🏠 القائمة
 </button>
 
 `;
 
-
-document.getElementById("coins").textContent=coins;
-
-document.getElementById("best").textContent=best;
+document.getElementById("modal")
+.classList.remove("hidden");
 
 }
 
 
-function buttonControl(id,type){
+function closeModal(){
 
-const button=
-document.getElementById(id);
+document.getElementById("modal")
+.classList.add("hidden");
+
+}
 
 
-button.addEventListener(
-"pointerdown",
-e=>{
+function loop(time){
+
+if(!game.running)return;
+
+if(game.paused)return;
+
+
+let dt=(time-lastTime)/1000;
+
+dt=Math.min(dt,0.035);
+
+lastTime=time;
+
+
+update(dt);
+
+draw();
+
+
+animation=requestAnimationFrame(loop);
+
+}
+
+
+/* أزرار الهاتف */
+
+function buttonControl(id,key){
+
+let button=document.getElementById(id);
+
+button.addEventListener("pointerdown",e=>{
+
 e.preventDefault();
-keys[type]=true;
-}
-);
 
+keys[key]=true;
 
-button.addEventListener(
-"pointerup",
-e=>{
-e.preventDefault();
-keys[type]=false;
-}
-);
+});
 
+button.addEventListener("pointerup",()=>{
 
-button.addEventListener(
-"pointercancel",
-()=>{
-keys[type]=false;
-}
-);
+keys[key]=false;
 
+});
 
-button.addEventListener(
-"pointerleave",
-()=>{
-keys[type]=false;
-}
-);
+button.addEventListener("pointercancel",()=>{
+
+keys[key]=false;
+
+});
+
+button.addEventListener("pointerleave",()=>{
+
+keys[key]=false;
+
+});
 
 }
 
 
-buttonControl(
-"left",
-"left"
-);
+buttonControl("left","left");
 
-buttonControl(
-"right",
-"right"
-);
+buttonControl("right","right");
 
-buttonControl(
-"nitroButton",
-"nitro"
-);
+buttonControl("nitroButton","nitro");
 
 
-document.addEventListener(
-"keydown",
-e=>{
+/* لوحة المفاتيح */
 
-if(e.key==="ArrowLeft")
+document.addEventListener("keydown",e=>{
+
+if(
+e.key==="ArrowLeft"||
+e.key.toLowerCase()==="a"
+)
 keys.left=true;
 
-if(e.key==="ArrowRight")
+
+if(
+e.key==="ArrowRight"||
+e.key.toLowerCase()==="d"
+)
 keys.right=true;
+
 
 if(e.code==="Space")
 keys.nitro=true;
 
+
+if(
+e.key.toLowerCase()==="p" &&
+!e.repeat
+)
+pauseGame();
+
 });
 
 
-document.addEventListener(
-"keyup",
-e=>{
+document.addEventListener("keyup",e=>{
 
-if(e.key==="ArrowLeft")
+if(
+e.key==="ArrowLeft"||
+e.key.toLowerCase()==="a"
+)
 keys.left=false;
 
-if(e.key==="ArrowRight")
+
+if(
+e.key==="ArrowRight"||
+e.key.toLowerCase()==="d"
+)
 keys.right=false;
+
 
 if(e.code==="Space")
 keys.nitro=false;
 
 });
 
+
+renderMenu();
+
 </script>
 
 </body>
 </html>
-
-
